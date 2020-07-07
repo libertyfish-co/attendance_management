@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  Emp_num: MyString
+  Emp_name: MyString
+  password_digest: MyString
+
+two:
+  Emp_num: MyString
+  Emp_name: MyString
+  password_digest: MyString

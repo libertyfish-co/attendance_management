@@ -1,0 +1,46 @@
+<h2>勤怠管理システム</h2>
+<br>
+
+<div class="container-fluid">
+  <!-- error of devise -->
+<%- flash.each do |error_type,message| -%>
+  <%= content_tag :div, message, :id => "flash_#{error_type}" if message.is_a?(String) %>
+<%- end -%>
+
+<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+
+<% if resource&.errors %>
+  <ul><!-- login error messages -->
+  <%  resource.errors.full_messages.each do |message|  %>
+        <li><%= message %></li>
+  <%  end %>
+  </ul>
+<% end %>
+  <div class="form-inputs">
+    
+    <div class="form-group">
+    <%= f.label "社員番号" %>
+    <%= f.text_field :emp_num,
+                required: true,
+                autofocus: true,
+                class: "form-control" %>
+    </div>
+    <div class="form-group">
+    <%= f.label "パスワード" %>
+    <%= f.password_field :password,
+                required: true,
+                input_html: { autocomplete: "current-password" },
+                class: "form-control" %>
+    </div>
+    
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit  "ログイン" ,class: "btn btn-primary"%>
+  </div>
+<% end %>
+<br>
+<div class="links">
+<%= render "devise/shared/links" %>
+</div>
+</div>
