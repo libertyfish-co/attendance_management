@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  corporation: one
+  employee: one
+  start_time: 2022-06-08 07:06:55
+  end_time: 2022-06-08 07:06:55
+  rest_time: 2022-06-08 07:06:55
+  work_content: MyString
+
+two:
+  corporation: two
+  employee: two
+  start_time: 2022-06-08 07:06:55
+  end_time: 2022-06-08 07:06:55
+  rest_time: 2022-06-08 07:06:55
+  work_content: MyString
