@@ -3,8 +3,10 @@ services:
   db:
     image: postgres
     volumes:
-      - ./tmp/db:/var/lib/postgresql/data
+      # - ./tmp/db:/var/lib/postgresql/data # macの場合
+      - app_postgre:/var/lib/postgresql/data # windowsの場合
     environment:
+      POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
   web:
     build: .
@@ -13,5 +15,11 @@ services:
       - .:/attendance_management
     ports:
       - "3000:3000"
+    environment:
+      VIRTUAL_PORT: 3000
     depends_on:
       - db
+# 以下はWindowsのみ使用
+volumes:
+  app_postgre:
+    external: true

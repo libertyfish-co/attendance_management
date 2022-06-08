@@ -1,15 +1,19 @@
 FROM ruby:2.6.5
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
-# yarnパッケージ管理ツールをインストール
-RUN apt-get update && apt-get install -y curl apt-transport-https wget && \
-curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
-apt-get update && apt-get install -y yarn
+
 # Node.jsをインストール
-RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - && \
-apt-get install nodejs
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && apt-get install -y nodejs
+
+RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
+
+# npm自体のバージョンを最新にする
+RUN npm install -g npm
+
+# install yarn
+RUN npm install -g yarn
+
 RUN mkdir /attendance_management
 WORKDIR /attendance_management
+
 COPY Gemfile /attendance_management/Gemfile
 COPY Gemfile.lock /attendance_management/Gemfile.lock
 RUN bundle install
