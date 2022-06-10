@@ -59,12 +59,8 @@ ActiveRecord::Schema.define(version: 2022_06_10_024319) do
   end
 
   create_table "departments", force: :cascade do |t|
-    t.bigint "corporation_id", null: false
-    t.string "code"
-    t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["corporation_id"], name: "index_departments_on_corporation_id"
   end
 
   create_table "employees", force: :cascade do |t|
@@ -133,7 +129,6 @@ ActiveRecord::Schema.define(version: 2022_06_10_024319) do
   add_foreign_key "attendance_details", "works"
   add_foreign_key "attendances", "employees"
   add_foreign_key "business_calendars", "corporations"
-  add_foreign_key "departments", "corporations"
   add_foreign_key "orders", "corporations"
   add_foreign_key "pattern_details", "orders"
   add_foreign_key "pattern_details", "patterns"
