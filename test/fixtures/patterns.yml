@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  pattern_name: MyString
+  base_date: 2022-06-10
+  start_time: 2022-06-10 00:37:10
+  end_time: 2022-06-10 00:37:10
+  work_content: MyString
+  employee_id: 
+
+two:
+  pattern_name: MyString
+  base_date: 2022-06-10
+  start_time: 2022-06-10 00:37:10
+  end_time: 2022-06-10 00:37:10
+  work_content: MyString
+  employee_id: 
