@@ -1,3 +1,13 @@
+<style>
+  .attendance__new__header{
+    text-align: center;
+    background-color: rgba(56, 96, 178, 1);
+    color: white;
+    padding: 6px;
+    width: 90%;
+    margin: 0 auto;
+  }
+</style>
 <%= form_with(model: attendance, local: true) do |form| %>
   <% if attendance.errors.any? %>
     <div id="error_explanation">
@@ -10,52 +20,83 @@
       </ul>
     </div>
   <% end %>
-  
+  <div class="attendance__new__header">時刻</div>
 <div class="container">
   <div class="row">
     <div class="col-sm">
-      One of three columns
+      <%= form.label :start_time %>
+      <%= form.datetime_select :start_time %>
     </div>
     <div class="col-sm">
-      One of three columns
+      <%= form.label :end_time %>
+      <%= form.datetime_select :end_time %>
     </div>
     <div class="col-sm">
-      One of three columns
+      <%= form.label :rest_time %>
+      <%= form.datetime_select :rest_time %>
+    </div>
+    <div class="col-sm">
+      <%= form.label :work_content %>
+      <%= form.text_field :work_content %>
     </div>
   </div>
 </div>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">First</th>
+      <th scope="col">Last</th>
+      <th scope="col">Handle</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+    </tr>
+    <tr>
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>@fat</td>
+    </tr>
+    <tr>
+      <td>Larry</td>
+      <td>the Bird</td>
+      <td>@twitter</td>
+    </tr>
+  </tbody>
+</table>
 
-  <div class="field">
-    <%= form.label :corporation_id %>
-    <%= form.text_field :corporation_id %>
-  </div>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First</th>
+      <th scope="col">Last</th>
+      <th scope="col">Handle</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>@fat</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td>Larry</td>
+      <td>the Bird</td>
+      <td>@twitter</td>
+    </tr>
+  </tbody>
+</table>
 
-  <div class="field">
-    <%= form.label :employee_id %>
-    <%= form.text_field :employee_id %>
-  </div>
-
-  <div class="field">
-    <%= form.label :start_time %>
-    <%= form.datetime_select :start_time %>
-  </div>
-
-  <div class="field">
-    <%= form.label :end_time %>
-    <%= form.datetime_select :end_time %>
-  </div>
-
-  <div class="field">
-    <%= form.label :rest_time %>
-    <%= form.datetime_select :rest_time %>
-  </div>
-
-  <div class="field">
-    <%= form.label :work_content %>
-    <%= form.text_field :work_content %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
 <% end %>
