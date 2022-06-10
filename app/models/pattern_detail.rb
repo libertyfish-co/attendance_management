@@ -1,0 +1,2 @@
+class PatternDetail < ApplicationRecord
+end

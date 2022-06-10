@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  order_id: 
+  work_id: 
+  pattern_id: 
+  start_time: 
+  end_time: 2022-06-10 00:40:32
+  work_content: MyString
+
+two:
+  order_id: 
+  work_id: 
+  pattern_id: 
+  start_time: 
+  end_time: 2022-06-10 00:40:32
+  work_content: MyString
