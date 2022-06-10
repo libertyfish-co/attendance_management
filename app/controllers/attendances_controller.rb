@@ -10,6 +10,11 @@ class AttendancesController < ApplicationController
   def show
   end
 
+  # GET /attendances/1/YYYYMM or /attendances/1/YYYYMM.json
+  def month
+    
+  end
+
   # GET /attendances/new
   def new
     @attendance = Attendance.new
@@ -66,5 +71,9 @@ class AttendancesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def attendance_params
       params.require(:attendance).permit(:corporation_id, :employee_id, :start_time, :end_time, :rest_time, :work_content)
+    end
+
+    def month_params
+      
     end
 end
