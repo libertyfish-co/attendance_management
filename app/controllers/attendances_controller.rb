@@ -12,7 +12,9 @@ class AttendancesController < ApplicationController
 
   # GET /attendances/1/YYYYMM or /attendances/1/YYYYMM.json
   def month
+  end
     
+  def week
   end
 
   # GET /attendances/new
