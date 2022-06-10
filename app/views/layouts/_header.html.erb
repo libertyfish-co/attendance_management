@@ -1,31 +1,75 @@
-<div>  
-    <div>会社：</div>
-    <div>社員：</div>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+<style>
+  .fontSize-13px {font-size: .8125rem;}
+  .fontSize-16px {font-size: 1rem;}
+  .fontSize-18px {font-size: 1.125rem;}
+  .fontSize-24px {font-size: 1.5rem;}
+  .padding-0{padding: 0;}
+  .padding-10px0px {padding: 10px 0;}
+  .padding-20px {padding: 20px;}
+  .theme-fontColor {color: rgba(56, 96, 178, 1);}
+  .theme-backgroundColor {background-color: rgba(56, 96, 178, 1);}
+  .header__select__adjust {
+      display: inline-block;
+      width: 150px;
+      height: 25px;
+      transform: translateY(-15px);
+  }
+  .header__pattern-select {
+      margin: 0 10px;
+      width: 100px;
+  }
+  .header__title {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+  }
+</style>
+<div class="padding-20px">
+    <div class="fontSize-13px padding-10px0px">
+        <div>会社：</div>
+        <div>社員：</div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-light padding-0">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <div class="mr-auto">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1">＜</a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">2022/06/01 木曜日</a></li>
-                <li class="page-item">
-                <a class="page-link" href="#">＞</a>
-                </li>
-            </ul>
-        </nav>
+        <div class="mr-auto d-flex">
+            <nav aria-label="Page navigation example" class="d-inline">
+                <ul class="pagination justify-content-center fontSize-18px">
+                    <li class="page-item disabled">
+                    <a class="page-link theme-fontColor" href="#" tabindex="-1">＜</a>
+                    </li>
+                    <li class="page-item"><span class="page-link" style="color: black;">2022/06/01 木曜日</span></li>
+                    <li class="page-item">
+                    <a class="page-link theme-fontColor" href="#">＞</a>
+                    </li>
+                </ul>
+            </nav>
+                <div class="header__pattern-select d-inline">
+                    <select class="form-control" id="exampleFormControlSelect1">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
         </div>
-        <div class="my-2 my-lg-0input-group-prepend">
-          <select class="custom-select" id="inputGroupSelect01">
-                <option selected>Choose...</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+
+        <div class="header__title fontSize-24px">勤怠登録</div>
+
+        <div class="my-lg-0input-group-prepend header__select__adjust">
+            <select class="form-control" id="exampleFormControlSelect1">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
             </select>
         </div>
     </div>
