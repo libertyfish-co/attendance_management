@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_10_024319) do
+ActiveRecord::Schema.define(version: 2022_06_13_083338) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(version: 2022_06_10_024319) do
   create_table "business_calendars", force: :cascade do |t|
     t.bigint "corporation_id", null: false
     t.date "date"
-    t.string "attribute"
+    t.string "proparties"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["corporation_id"], name: "index_business_calendars_on_corporation_id"
@@ -76,10 +76,9 @@ ActiveRecord::Schema.define(version: 2022_06_10_024319) do
     t.bigint "department_id", null: false
     t.string "employee_code", null: false
     t.string "user_code", null: false
-    t.string "mail_address", null: false
     t.string "name", null: false
     t.string "kana", null: false
-    t.string "attribute", default: "3", null: false
+    t.string "proparties", default: "3", null: false
     t.boolean "invalid_flag", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

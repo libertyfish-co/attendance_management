@@ -36,7 +36,6 @@ class DeviseCreateEmployees < ActiveRecord::Migration[6.0]
       t.references :department, null: false, foreign_key: true
       t.string     :employee_code, null: false
       t.string     :user_code, null: false
-      t.string     :mail_address, null: false
       ##苗字と名前の間は半角スペース
       t.string     :name, null: false
       ##苗字と名前の間は半角スペース
