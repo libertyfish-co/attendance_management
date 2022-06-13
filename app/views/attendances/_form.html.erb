@@ -7,6 +7,15 @@
     width: 90%;
     margin: 0 auto;
   }
+  .attendance__new__tables{
+    
+  }
+  table.table.attendance__new__table{
+    width: 60%;
+  }
+  table.table.attendance__new__detail-table{
+    width: 100px;
+  }
 </style>
 <%= form_with(model: attendance, local: true) do |form| %>
   <% if attendance.errors.any? %>
@@ -41,62 +50,57 @@
     </div>
   </div>
 </div>
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</table>
+<div>
+    <table class="table attendance__new__table">
+      <thead>
+        <tr>
+          <th scope="col">オーダーCD</th>
+          <th scope="col">作業CD</th>
+          <th scope="col">作業時間</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+              <select class="custom-select" id="inputGroupSelect01">
+                <option selected>Choose...</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+          </td>
+          <td>
+              <select class="custom-select" id="inputGroupSelect01">
+                <option selected>Choose...</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+          </td>
+          <td><%= form.text_field :work_content %></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="table attendance__new__detail-table">
+      <thead>
+        <tr>
+          <th scope="col">稼働</th>
+          <th scope="col">休憩</th>
+          <th scope="col">有給</th>
+          <th scope="col">控除</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>8</th>
+          <td>1</td>
+          <td>0</td>
+          <td>0</td>
+        </tr>
+      </tbody>
+    </table>
+</div>
 
 <% end %>
