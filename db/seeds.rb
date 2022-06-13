@@ -95,7 +95,7 @@ Order.create!(
 Order.create!(
 	corporation_id: corporation.id,
 	code: "940012",
-	name: "有給(一般)",
+	name: "有給(特別)",
 	time_flg: 3,
 	rest_flg: 1,
 	paid_digestion_flg: true
