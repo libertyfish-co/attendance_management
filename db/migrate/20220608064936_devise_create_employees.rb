@@ -32,6 +32,19 @@ class DeviseCreateEmployees < ActiveRecord::Migration[6.0]
       # t.string   :unlock_token # Only if unlock strategy is :email or :both
       # t.datetime :locked_at
 
+      ##追加分
+      t.references :department, null: false, foreign_key: true
+      t.string     :employee_code, null: false
+      t.string     :user_code, null: false
+      t.string     :mail_address, null: false
+      ##苗字と名前の間は半角スペース
+      t.string     :name, null: false
+      ##苗字と名前の間は半角スペース
+      t.string     :kana, null: false
+      #0: 社員、1: 部長、2: 課長、3: 平社員
+      t.string     :attribute, null: false, default: "3"
+      #true: 無効、false: 有効
+      t.boolean    :invalid_flag, null: false, default: false
 
       t.timestamps null: false
     end

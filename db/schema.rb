@@ -59,8 +59,12 @@ ActiveRecord::Schema.define(version: 2022_06_10_024319) do
   end
 
   create_table "departments", force: :cascade do |t|
+    t.bigint "corporation_id", null: false
+    t.string "code"
+    t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["corporation_id"], name: "index_departments_on_corporation_id"
   end
 
   create_table "employees", force: :cascade do |t|
@@ -69,8 +73,17 @@ ActiveRecord::Schema.define(version: 2022_06_10_024319) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
+    t.bigint "department_id", null: false
+    t.string "employee_code", null: false
+    t.string "user_code", null: false
+    t.string "mail_address", null: false
+    t.string "name", null: false
+    t.string "kana", null: false
+    t.string "attribute", default: "3", null: false
+    t.boolean "invalid_flag", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["department_id"], name: "index_employees_on_department_id"
     t.index ["email"], name: "index_employees_on_email", unique: true
     t.index ["reset_password_token"], name: "index_employees_on_reset_password_token", unique: true
   end
@@ -129,6 +142,8 @@ ActiveRecord::Schema.define(version: 2022_06_10_024319) do
   add_foreign_key "attendance_details", "works"
   add_foreign_key "attendances", "employees"
   add_foreign_key "business_calendars", "corporations"
+  add_foreign_key "departments", "corporations"
+  add_foreign_key "employees", "departments"
   add_foreign_key "orders", "corporations"
   add_foreign_key "pattern_details", "orders"
   add_foreign_key "pattern_details", "patterns"
