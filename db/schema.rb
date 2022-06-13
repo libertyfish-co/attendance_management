@@ -76,7 +76,6 @@ ActiveRecord::Schema.define(version: 2022_06_10_024319) do
     t.bigint "department_id", null: false
     t.string "employee_code", null: false
     t.string "user_code", null: false
-    t.string "mail_address", null: false
     t.string "name", null: false
     t.string "kana", null: false
     t.string "attribute", default: "3", null: false
