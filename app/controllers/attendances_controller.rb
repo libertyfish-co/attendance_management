@@ -15,6 +15,9 @@ class AttendancesController < ApplicationController
   end
     
   def week
+    @base = Time.zone.now
+    @first_day = @base.beginnig_of_week(:sunday)
+    @last_day = @base.end_of_week(:sunday)
   end
 
   # GET /attendances/new
