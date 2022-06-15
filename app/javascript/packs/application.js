@@ -7,6 +7,9 @@ require("@rails/ujs").start()
 require("turbolinks").start()
 require("@rails/activestorage").start()
 require("channels")
+// jquery使用のため追記
+require('jquery')
+require('month.js')
 
 
 // Uncomment to copy all static images under ../images to the output folder and reference
