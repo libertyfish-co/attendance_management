@@ -6,6 +6,8 @@ services:
       # - ./tmp/db:/var/lib/postgresql/data # macの場合
       - app_postgre:/var/lib/postgresql/data # windowsの場合
     environment:
+      TZ: Asia/Tokyo
+      PGTZ: Asia/Tokyo
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
   web:
