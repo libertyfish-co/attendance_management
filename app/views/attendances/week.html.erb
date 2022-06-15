@@ -1,5 +1,13 @@
 <div>
-    <%= (@first_day.to_date..@last_day.to_date).each do |week|
-        <%= week %>
+    <div>
+        <%= link_to "＜" ,week_attendances_path('dd':@first_day.ago(1.weeks).strftime("%Y%m%d")) %>
+        <%= link_to "＞" ,week_attendances_path('dd':@first_day.since(1.weeks).strftime("%Y%m%d"))%>
+    </div>
+
+    <% (@first_day.to_date..@last_day.to_date).each do |week| %>
+            <%= week.strftime("#{@dw[week.wday]}") %>
+            <%= week %>
+            <!-- 下記の全角空白は日付を見やすくするため、CSSで整えるまで(仮)で書いてます。 -->
+            　　
     <% end %>
 </div>
