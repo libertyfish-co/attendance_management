@@ -15,9 +15,11 @@ class AttendancesController < ApplicationController
   end
     
   def week
-    @base = Time.zone.now
-    @first_day = @base.beginnig_of_week(:sunday)
+    @result = params['dd'].present? ?params['dd']:Time.zone.now.strftime("%d")
+    @base = @result.to_date
+    @first_day = @base.beginning_of_week(:sunday)
     @last_day = @base.end_of_week(:sunday)
+    @dw = ["日", "月", "火", "水", "木", "金", "土"]
   end
 
   # GET /attendances/new
