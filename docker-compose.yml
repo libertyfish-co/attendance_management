@@ -21,8 +21,18 @@ services:
       - "3000:3000"
     environment:
       VIRTUAL_PORT: 3000
+      WEBPACKER_DEV_SERVER_HOST: webpacker
     depends_on:
       - db
+  webpacker:
+    build: .
+    volumes:
+      - .:/attendance_management
+    command: ./bin/webpack-dev-server
+    environment:
+      WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
+    ports:
+      - "3035:3035"
 # 以下はWindowsのみ使用
 volumes:
   app_postgre:
