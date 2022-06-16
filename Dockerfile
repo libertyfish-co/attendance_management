@@ -19,6 +19,8 @@ COPY Gemfile.lock /attendance_management/Gemfile.lock
 RUN bundle install
 COPY . /attendance_management
 
+RUN bundle exec rails webpacker:compile
+
 # Add a script to be executed every time the container starts.
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
