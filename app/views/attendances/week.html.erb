@@ -1,6 +1,6 @@
 <div>
     <div>
-        <%= link_to "＜" ,week_attendances_path('dd':@first_day.ago(1.weeks).strftime("%Y%m%d")) %>
+        <%= link_to "＜" ,week_attendances_path('dd':@first_day.ago(1.weeks).strftime("%Y%m%d"))%>
         <%= link_to "＞" ,week_attendances_path('dd':@first_day.since(1.weeks).strftime("%Y%m%d"))%>
     </div>
 
