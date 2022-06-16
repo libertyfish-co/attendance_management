@@ -13,15 +13,14 @@ corporation = Corporation.create!(
     time_limit: 33,
 )
 
-# TODO:時間、休憩、有休消化ポイントの設計を確認
 # 通常勤怠オーダー
 (1..5).each do |n|
 	Order.create!(
 		corporation_id: corporation.id,
 		code: "1000#{n}1",
-		name: "テスト会社",
-		time_flg: 1,
-		rest_flg: 0,
+		name: "テスト会社#{n}",
+		time_flg: 0,
+		display_flg: 0,
 		paid_digestion_flg: false
 	)
 end
@@ -31,45 +30,18 @@ Order.create!(
 	corporation_id: corporation.id,
 	code: "500000",
 	name: "休憩",
-	time_flg: 0,
-	rest_flg: 1,
+	time_flg: 1,
+	display_flg: 0,
 	paid_digestion_flg: false
 )
-
-Order.create!(
-	corporation_id: corporation.id,
-	code: "940031",
-	name: "公休(夏季休暇)",
-	time_flg: 1,
-	rest_flg: 1,
-	paid_digestion_flg: false
- )
- 
- Order.create!(
-	corporation_id: corporation.id,
-	code: "940032",
-	name: "代休",
-	time_flg: 1,
-	rest_flg: 1,
-	paid_digestion_flg: false
- )
- 
- Order.create!(
-	corporation_id: corporation.id,
-	code: "930011",
-	name: "早退",
-	time_flg: -1,
-	rest_flg: 0,
-	paid_digestion_flg: false
- )
 
 # 遅刻
 Order.create!(
 	corporation_id: corporation.id,
 	code: "920021",
 	name: "遅刻(公共機関証明あり)",
-	time_flg: 1,
-	rest_flg: 1,
+	time_flg: 5,
+	display_flg: 1,
 	paid_digestion_flg: false
 )
 
@@ -77,8 +49,17 @@ Order.create!(
 	corporation_id: corporation.id,
 	code: "920022",
 	name: "遅刻(公共機関証明なし)",
-	time_flg: -1,
-	rest_flg: 0,
+	time_flg: 2,
+	display_flg: 1,
+	paid_digestion_flg: false
+)
+
+Order.create!(
+	corporation_id: corporation.id,
+	code: "930011",
+	name: "早退",
+	time_flg: 2,
+	display_flg: 1,
 	paid_digestion_flg: false
 )
 
@@ -87,8 +68,8 @@ Order.create!(
 	corporation_id: corporation.id,
 	code: "940011",
 	name: "有給(一般)",
-	time_flg: 1,
-	rest_flg: 0,
+	time_flg: 3,
+	display_flg: 1,
 	paid_digestion_flg: true
 )
 
@@ -97,8 +78,64 @@ Order.create!(
 	corporation_id: corporation.id,
 	code: "940012",
 	name: "有給(特別)",
-	time_flg: 1,
-	rest_flg: 0,
+	time_flg: 4,
+	display_flg: 1,
+	paid_digestion_flg: false
+)
+
+Order.create!(
+	corporation_id: corporation.id,
+	code: "940021",
+	name: "欠勤",
+	time_flg: 2,
+	display_flg: 1,
+	paid_digestion_flg: false
+)
+
+Order.create!(
+	corporation_id: corporation.id,
+	code: "940031",
+	name: "公休(夏季休暇)",
+	time_flg: 5,
+	display_flg: 1,
+	paid_digestion_flg: false
+)
+
+Order.create!(
+	corporation_id: corporation.id,
+	code: "940032",
+	name: "代休",
+	time_flg: 5,
+	display_flg: 1,
+	paid_digestion_flg: false
+)
+
+Order.create!(
+	corporation_id: corporation.id,
+	code: "950011",
+	name: "休職(私傷病休職)",
+	time_flg: 5,
+	display_flg: 1,
+	paid_digestion_flg: false
+)
+
+# 休職(育児)
+Order.create!(
+	corporation_id: corporation.id,
+	code: "950021",
+	name: "休職(育児)",
+	time_flg: 5,
+	display_flg: 1,
+	paid_digestion_flg: false
+)
+
+# 休職(コロナ)
+Order.create!(
+	corporation_id: corporation.id,
+	code: "950031",
+	name: "休職(コロナ)",
+	time_flg: 0,
+	display_flg: 1,
 	paid_digestion_flg: false
 )
 
@@ -107,8 +144,8 @@ Order.create!(
 	corporation_id: corporation.id,
 	code: "100099",
 	name: "テスト会社",
-	time_flg: 1,
-	rest_flg: 0,
+	time_flg: 0,
+	display_flg: 0,
 	paid_digestion_flg: false,
 	expiration_date: Date.today.prev_month
 )
