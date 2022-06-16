@@ -5,4 +5,5 @@ class Employee < ApplicationRecord
          :recoverable, :rememberable, :validatable
   belongs_to :department
   delegate :corporation, to: :department
+  has_many :attendances
 end
