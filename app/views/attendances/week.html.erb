@@ -27,4 +27,24 @@
             </tr>
         </tbody>
     </table>
+
+    <table class="table table-striped-columns">
+        <% (@first_day.to_date..@last_day.to_date).each do |week| %>
+            <thead>
+                <tr>
+                    <th>
+                        <%= week.strftime("#{@dw[week.wday]}") %><br />
+                        <%= week %>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            <% @attendance = Attendance.includes(:attendance_details).references(:attendance_details).find_by(base_date:week, employee_id:@employee.id) %>
+                <tr>
+                    <!--<td><%= @attendance %></td>-->
+                    <td>うえだ</td>
+                </tr>
+            </tbody>
+        <% end %>
+    </table>
 </div>

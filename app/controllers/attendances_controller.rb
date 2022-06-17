@@ -20,6 +20,7 @@ class AttendancesController < ApplicationController
     @first_day = @base.beginning_of_week(:sunday)
     @last_day = @base.end_of_week(:sunday)
     @dw = ["日", "月", "火", "水", "木", "金", "土"]
+    @employee = Employee.first
   end
 
   # GET /attendances/new
