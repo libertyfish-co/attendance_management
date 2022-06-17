@@ -223,14 +223,13 @@ Employee.create!(
 	invalid_flag: false
 )
 
-date = Date.today
-
+date = Time.current
 # 作業 ＋ 休憩 ＋ 有給(一般)
 attendance1 = Attendance.create!(
 	employee_id: employee1.id,
 	base_date: date,
-	start_time: DateTime.new(date.year, date.month, date.day, 9),
-	end_time: DateTime.new(date.year, date.month, date.day, 18),
+	start_time: Time.new(date.year, date.month, date.day, 9),
+	end_time: Time.new(date.year, date.month, date.day, 18),
 	break_time: 60,
 	operating_time: 180,
 	paid_time: 300,
@@ -241,8 +240,8 @@ AttendanceDetail.create!(
 	order_id: order5.id,
 	work_id: work3.id,
 	attendance_id: attendance1.id,
-	start_time: DateTime.new(date.year, date.month, date.day, 9),
-	end_time: DateTime.new(date.year, date.month, date.day, 12),
+	start_time: Time.new(date.year, date.month, date.day, 9),
+	end_time: Time.new(date.year, date.month, date.day, 12),
 	work_content: 'テスト1'
 )
 
@@ -250,8 +249,8 @@ AttendanceDetail.create!(
 	order_id: order1.id,
 	work_id: work1.id,
 	attendance_id: attendance1.id,
-	start_time: DateTime.new(date.year, date.month, date.day, 12),
-	end_time: DateTime.new(date.year, date.month, date.day, 13),
+	start_time: Time.new(date.year, date.month, date.day, 12),
+	end_time: Time.new(date.year, date.month, date.day, 13),
 	work_content: 'テスト2'
 )
 
@@ -259,17 +258,17 @@ AttendanceDetail.create!(
 	order_id: order2.id,
 	work_id: work2.id,
 	attendance_id: attendance1.id,
-	start_time: DateTime.new(date.year, date.month, date.day, 13),
-	end_time: DateTime.new(date.year, date.month, date.day, 18),
+	start_time: Time.new(date.year, date.month, date.day, 13),
+	end_time: Time.new(date.year, date.month, date.day, 18),
 	work_content: 'テスト3'
 )
 
 # 有給(特別)
 attendance2 = Attendance.create!(
 	employee_id: employee1.id,
-	base_date: date,
-	start_time: DateTime.new(date.year, date.month, date.next_day.day, 9),
-	end_time: DateTime.new(date.year, date.month, date.next_day.day, 18),
+	base_date: date.next_day,
+	start_time: Time.new(date.year, date.month, date.next_day.day, 9),
+	end_time: Time.new(date.year, date.month, date.next_day.day, 18),
 	break_time: 60,
 	special_paid_time: 480,
 	work_content: '勤怠備考2'
@@ -279,8 +278,8 @@ AttendanceDetail.create!(
 	order_id: order3.id,
 	work_id: work2.id,
 	attendance_id: attendance2.id,
-	start_time: DateTime.new(date.year, date.month, date.next_day.day, 9),
-	end_time: DateTime.new(date.year, date.month, date.next_day.day, 12),
+	start_time: Time.new(date.year, date.month, date.next_day.day, 9),
+	end_time: Time.new(date.year, date.month, date.next_day.day, 12),
 	work_content: 'テスト4'
 )
 
@@ -288,8 +287,8 @@ AttendanceDetail.create!(
 	order_id: order1.id,
 	work_id: work1.id,
 	attendance_id: attendance2.id,
-	start_time: DateTime.new(date.year, date.month, date.next_day.day, 12),
-	end_time: DateTime.new(date.year, date.month, date.next_day.day, 13),
+	start_time: Time.new(date.year, date.month, date.next_day.day, 12),
+	end_time: Time.new(date.year, date.month, date.next_day.day, 13),
 	work_content: 'テスト5'
 )
 
@@ -297,17 +296,17 @@ AttendanceDetail.create!(
 	order_id: order3.id,
 	work_id: work2.id,
 	attendance_id: attendance2.id,
-	start_time: DateTime.new(date.year, date.month, date.next_day.day, 13),
-	end_time: DateTime.new(date.year, date.month, date.next_day.day, 18),
+	start_time: Time.new(date.year, date.month, date.next_day.day, 13),
+	end_time: Time.new(date.year, date.month, date.next_day.day, 18),
 	work_content: 'テスト6'
 )
 
 # 欠勤
 attendance3 = Attendance.create!(
 	employee_id: employee1.id,
-	base_date: date,
-	start_time: DateTime.new(date.year, date.month, date.prev_day.day, 9),
-	end_time: DateTime.new(date.year, date.month, date.prev_day.day, 18),
+	base_date: date.prev_day,
+	start_time: Time.new(date.year, date.month, date.prev_day.day, 9),
+	end_time: Time.new(date.year, date.month, date.prev_day.day, 18),
 	break_time: 60,
 	deduction_time: 480,
 	work_content: '勤怠備考2'
@@ -317,8 +316,8 @@ AttendanceDetail.create!(
 	order_id: order4.id,
 	work_id: work2.id,
 	attendance_id: attendance3.id,
-	start_time: DateTime.new(date.year, date.month, date.prev_day.day, 9),
-	end_time: DateTime.new(date.year, date.month, date.prev_day.day, 12),
+	start_time: Time.new(date.year, date.month, date.prev_day.day, 9),
+	end_time: Time.new(date.year, date.month, date.prev_day.day, 12),
 	work_content: 'テスト4'
 )
 
@@ -326,8 +325,8 @@ AttendanceDetail.create!(
 	order_id: order1.id,
 	work_id: work1.id,
 	attendance_id: attendance3.id,
-	start_time: DateTime.new(date.year, date.month, date.prev_day.day, 12),
-	end_time: DateTime.new(date.year, date.month, date.prev_day.day, 13),
+	start_time: Time.new(date.year, date.month, date.prev_day.day, 12),
+	end_time: Time.new(date.year, date.month, date.prev_day.day, 13),
 	work_content: 'テスト5'
 )
 
@@ -335,7 +334,7 @@ AttendanceDetail.create!(
 	order_id: order4.id,
 	work_id: work2.id,
 	attendance_id: attendance3.id,
-	start_time: DateTime.new(date.year, date.month, date.prev_day.day, 13),
-	end_time: DateTime.new(date.year, date.month, date.prev_day.day, 18),
+	start_time: Time.new(date.year, date.month, date.prev_day.day, 13),
+	end_time: Time.new(date.year, date.month, date.prev_day.day, 18),
 	work_content: 'テスト6'
 )
