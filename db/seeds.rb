@@ -271,8 +271,7 @@ attendance2 = Attendance.create!(
 	start_time: DateTime.new(date.year, date.month, date.next_day.day, 9),
 	end_time: DateTime.new(date.year, date.month, date.next_day.day, 18),
 	break_time: 60,
-	operating_time: 180,
-	paid_time: 300,
+	special_paid_time: 480,
 	work_content: '勤怠備考2'
 )
 
@@ -310,8 +309,7 @@ attendance3 = Attendance.create!(
 	start_time: DateTime.new(date.year, date.month, date.prev_day.day, 9),
 	end_time: DateTime.new(date.year, date.month, date.prev_day.day, 18),
 	break_time: 60,
-	operating_time: 180,
-	paid_time: 300,
+	deduction_time: 480,
 	work_content: '勤怠備考2'
 )
 
