@@ -8,9 +8,11 @@
 
 # 法人
 corporation = Corporation.create!(
-    name: "リバティ・フィッシュ株式会社",
-    time_unit: 1,
-    time_limit: 33,
+  name: "リバティ・フィッシュ株式会社",
+  time_unit: 1,
+  time_limit: 33,
+	scheduled_working_hours: 480,
+	regular_lines: 10
 )
 
 # 通常勤怠オーダー
@@ -19,20 +21,18 @@ corporation = Corporation.create!(
 		corporation_id: corporation.id,
 		code: "1000#{n}1",
 		name: "テスト会社#{n}",
-		time_flg: 0,
-		display_flg: 0,
-		paid_digestion_flg: false
+		itemized_time: 0,
+		display_flg: 0
 	)
 end
 
 # 休み
-Order.create!(
+order1 = Order.create!(
 	corporation_id: corporation.id,
 	code: "500000",
 	name: "休憩",
-	time_flg: 1,
-	display_flg: 0,
-	paid_digestion_flg: false
+	itemized_time: 1,
+	display_flg: 0
 )
 
 # 遅刻
@@ -40,83 +40,74 @@ Order.create!(
 	corporation_id: corporation.id,
 	code: "920021",
 	name: "遅刻(公共機関証明あり)",
-	time_flg: 5,
-	display_flg: 1,
-	paid_digestion_flg: false
+	itemized_time: 5,
+	display_flg: 1
 )
 
 Order.create!(
 	corporation_id: corporation.id,
 	code: "920022",
 	name: "遅刻(公共機関証明なし)",
-	time_flg: 2,
-	display_flg: 1,
-	paid_digestion_flg: false
+	itemized_time: 2,
+	display_flg: 1
 )
 
 Order.create!(
 	corporation_id: corporation.id,
 	code: "930011",
 	name: "早退",
-	time_flg: 2,
-	display_flg: 1,
-	paid_digestion_flg: false
+	itemized_time: 2,
+	display_flg: 1
 )
 
 # 有休
-Order.create!(
+order2 = Order.create!(
 	corporation_id: corporation.id,
 	code: "940011",
 	name: "有給(一般)",
-	time_flg: 3,
-	display_flg: 1,
-	paid_digestion_flg: true
+	itemized_time: 3,
+	display_flg: 1
 )
 
 # 有休(特別)
-Order.create!(
+order3 = Order.create!(
 	corporation_id: corporation.id,
 	code: "940012",
 	name: "有給(特別)",
-	time_flg: 4,
-	display_flg: 1,
-	paid_digestion_flg: false
+	itemized_time: 4,
+	display_flg: 1
 )
 
-Order.create!(
+order4 = Order.create!(
 	corporation_id: corporation.id,
 	code: "940021",
 	name: "欠勤",
-	time_flg: 2,
-	display_flg: 1,
-	paid_digestion_flg: false
+	itemized_time: 2,
+	display_flg: 1
 )
 
 Order.create!(
 	corporation_id: corporation.id,
 	code: "940031",
 	name: "公休(夏季休暇)",
-	time_flg: 5,
-	display_flg: 1,
-	paid_digestion_flg: false
+	itemized_time: 5,
+	display_flg: 1
 )
 
 Order.create!(
 	corporation_id: corporation.id,
 	code: "940032",
 	name: "代休",
-	time_flg: 5,
-	display_flg: 1,
-	paid_digestion_flg: false
+	itemized_time: 5,
+	display_flg: 1
 )
 
 Order.create!(
 	corporation_id: corporation.id,
 	code: "950011",
 	name: "休職(私傷病休職)",
-	time_flg: 5,
-	display_flg: 1,
-	paid_digestion_flg: false
+	itemized_time: 5,
+	display_flg: 1
 )
 
 # 休職(育児)
@@ -124,9 +115,8 @@ Order.create!(
 	corporation_id: corporation.id,
 	code: "950021",
 	name: "休職(育児)",
-	time_flg: 5,
-	display_flg: 1,
-	paid_digestion_flg: false
+	itemized_time: 5,
+	display_flg: 1
 )
 
 # 休職(コロナ)
@@ -134,42 +124,54 @@ Order.create!(
 	corporation_id: corporation.id,
 	code: "950031",
 	name: "休職(コロナ)",
-	time_flg: 0,
-	display_flg: 1,
-	paid_digestion_flg: false
+	itemized_time: 0,
+	display_flg: 1
 )
 
 # 有効期限切れの作業コード
 Order.create!(
 	corporation_id: corporation.id,
 	code: "100099",
-	name: "テスト会社",
-	time_flg: 0,
+	name: "有効期限切れテスト会社",
+	itemized_time: 0,
 	display_flg: 0,
-	paid_digestion_flg: false,
 	expiration_date: Date.today.prev_month
 )
 
+order5 = Order.create!(
+	corporation_id: corporation.id,
+	code: "100091",
+	name: "テスト会社9",
+	itemized_time: 0,
+	display_flg: 0
+)
+
 # 作業コード
-Work.create!(
+work1 = Work.create!(
 	corporation_id: corporation.id,
 	code: "500",
 	name: "休憩"
 )
 
-Work.create!(
+work2 = Work.create!(
 	corporation_id: corporation.id,
 	code: "900",
 	name: "休み"
 )
 
-["デザイン", "プログラミング", "テスト", "レビュー", "ドキュメント"].each_with_index do |name, i|
+["デザイン", "テスト", "レビュー", "ドキュメント"].each_with_index do |name, i|
 	Work.create!(
 		corporation_id: corporation.id,
 		code: "10#{i}",
 		name: "#{name}"
 	)
 end
+
+work3 = Work.create!(
+	corporation_id: corporation.id,
+	code: "105",
+	name: "プログラミング"
+)
 
 department1 = Department.create!(
 	corporation_id: corporation.id,
@@ -184,7 +186,7 @@ department2 = Department.create!(
 )
 
 # 社員
-Employee.create!(
+employee1 = Employee.create!(
 	email: "test1@email.com",
 	password: "password",
 	department_id: department1.id,
@@ -219,4 +221,123 @@ Employee.create!(
 	kana: "ヤマダ ハナコ",
 	proparties: "0",
 	invalid_flag: false
+)
+
+date = Date.today
+
+# 作業 ＋ 休憩 ＋ 有給(一般)
+attendance1 = Attendance.create!(
+	employee_id: employee1.id,
+	base_date: date,
+	start_time: DateTime.new(date.year, date.month, date.day, 9),
+	end_time: DateTime.new(date.year, date.month, date.day, 18),
+	break_time: 60,
+	operating_time: 180,
+	paid_time: 300,
+	work_content: '勤怠備考1'
+)
+
+AttendanceDetail.create!(
+	order_id: order5.id,
+	work_id: work3.id,
+	attendance_id: attendance1.id,
+	start_time: DateTime.new(date.year, date.month, date.day, 9),
+	end_time: DateTime.new(date.year, date.month, date.day, 12),
+	work_content: 'テスト1'
+)
+
+AttendanceDetail.create!(
+	order_id: order1.id,
+	work_id: work1.id,
+	attendance_id: attendance1.id,
+	start_time: DateTime.new(date.year, date.month, date.day, 12),
+	end_time: DateTime.new(date.year, date.month, date.day, 13),
+	work_content: 'テスト2'
+)
+
+AttendanceDetail.create!(
+	order_id: order2.id,
+	work_id: work2.id,
+	attendance_id: attendance1.id,
+	start_time: DateTime.new(date.year, date.month, date.day, 13),
+	end_time: DateTime.new(date.year, date.month, date.day, 18),
+	work_content: 'テスト3'
+)
+
+# 有給(特別)
+attendance2 = Attendance.create!(
+	employee_id: employee1.id,
+	base_date: date,
+	start_time: DateTime.new(date.year, date.month, date.next_day.day, 9),
+	end_time: DateTime.new(date.year, date.month, date.next_day.day, 18),
+	break_time: 60,
+	operating_time: 180,
+	paid_time: 300,
+	work_content: '勤怠備考2'
+)
+
+AttendanceDetail.create!(
+	order_id: order3.id,
+	work_id: work2.id,
+	attendance_id: attendance2.id,
+	start_time: DateTime.new(date.year, date.month, date.next_day.day, 9),
+	end_time: DateTime.new(date.year, date.month, date.next_day.day, 12),
+	work_content: 'テスト4'
+)
+
+AttendanceDetail.create!(
+	order_id: order1.id,
+	work_id: work1.id,
+	attendance_id: attendance2.id,
+	start_time: DateTime.new(date.year, date.month, date.next_day.day, 12),
+	end_time: DateTime.new(date.year, date.month, date.next_day.day, 13),
+	work_content: 'テスト5'
+)
+
+AttendanceDetail.create!(
+	order_id: order3.id,
+	work_id: work2.id,
+	attendance_id: attendance2.id,
+	start_time: DateTime.new(date.year, date.month, date.next_day.day, 13),
+	end_time: DateTime.new(date.year, date.month, date.next_day.day, 18),
+	work_content: 'テスト6'
+)
+
+# 欠勤
+attendance3 = Attendance.create!(
+	employee_id: employee1.id,
+	base_date: date,
+	start_time: DateTime.new(date.year, date.month, date.prev_day.day, 9),
+	end_time: DateTime.new(date.year, date.month, date.prev_day.day, 18),
+	break_time: 60,
+	operating_time: 180,
+	paid_time: 300,
+	work_content: '勤怠備考2'
+)
+
+AttendanceDetail.create!(
+	order_id: order4.id,
+	work_id: work2.id,
+	attendance_id: attendance3.id,
+	start_time: DateTime.new(date.year, date.month, date.prev_day.day, 9),
+	end_time: DateTime.new(date.year, date.month, date.prev_day.day, 12),
+	work_content: 'テスト4'
+)
+
+AttendanceDetail.create!(
+	order_id: order1.id,
+	work_id: work1.id,
+	attendance_id: attendance3.id,
+	start_time: DateTime.new(date.year, date.month, date.prev_day.day, 12),
+	end_time: DateTime.new(date.year, date.month, date.prev_day.day, 13),
+	work_content: 'テスト5'
+)
+
+AttendanceDetail.create!(
+	order_id: order4.id,
+	work_id: work2.id,
+	attendance_id: attendance3.id,
+	start_time: DateTime.new(date.year, date.month, date.prev_day.day, 13),
+	end_time: DateTime.new(date.year, date.month, date.prev_day.day, 18),
+	work_content: 'テスト6'
 )
