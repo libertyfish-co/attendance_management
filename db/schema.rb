@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_16_002237) do
+ActiveRecord::Schema.define(version: 2022_06_17_050309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,12 +40,12 @@ ActiveRecord::Schema.define(version: 2022_06_16_002237) do
     t.bigint "attendance_id", null: false
     t.bigint "order_id", null: false
     t.bigint "work_id", null: false
-    t.string "work_time"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "start_time"
     t.datetime "end_time"
     t.string "work_content"
+    t.integer "work_time"
     t.index ["attendance_id"], name: "index_attendance_details_on_attendance_id"
     t.index ["order_id"], name: "index_attendance_details_on_order_id"
     t.index ["work_id"], name: "index_attendance_details_on_work_id"
@@ -59,6 +59,14 @@ ActiveRecord::Schema.define(version: 2022_06_16_002237) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.date "base_date"
+    t.integer "break_time"
+    t.integer "operating_time"
+    t.integer "paid_time"
+    t.integer "special_paid_time"
+    t.integer "deduction_time"
+    t.boolean "consistency_flg"
+    t.boolean "approval_flg"
+    t.boolean "lock_flg"
     t.index ["employee_id"], name: "index_attendances_on_employee_id"
   end
 
@@ -77,6 +85,8 @@ ActiveRecord::Schema.define(version: 2022_06_16_002237) do
     t.integer "time_limit"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "scheduled_working_hours"
+    t.integer "regular_lines"
   end
 
   create_table "departments", force: :cascade do |t|
@@ -112,12 +122,12 @@ ActiveRecord::Schema.define(version: 2022_06_16_002237) do
     t.bigint "corporation_id", null: false
     t.string "code"
     t.string "name"
-    t.boolean "paid_digestion_flg"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "time_flg"
+    t.integer "itemized_time"
     t.integer "display_flg"
     t.date "expiration_date"
+    t.integer "flg"
     t.index ["corporation_id"], name: "index_orders_on_corporation_id"
   end
 
@@ -130,6 +140,7 @@ ActiveRecord::Schema.define(version: 2022_06_16_002237) do
     t.string "work_content"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "work_time"
     t.index ["order_id"], name: "index_pattern_details_on_order_id"
     t.index ["pattern_id"], name: "index_pattern_details_on_pattern_id"
     t.index ["work_id"], name: "index_pattern_details_on_work_id"
@@ -145,6 +156,11 @@ ActiveRecord::Schema.define(version: 2022_06_16_002237) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "default_flg"
+    t.integer "break_time"
+    t.integer "operating_time"
+    t.integer "paid_time"
+    t.integer "special_paid_time"
+    t.integer "deduction_time"
     t.index ["employee_id"], name: "index_patterns_on_employee_id"
   end
 
