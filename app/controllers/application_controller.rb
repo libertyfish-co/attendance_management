@@ -4,6 +4,6 @@ class ApplicationController < ActionController::Base
     end
 
     def after_sign_out_path_for(resource)
-        sign_in_path
+        new_employee_session_path
     end
 end
