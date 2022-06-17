@@ -1,13 +1,30 @@
 <div>
-    <div>
-        <%= link_to "＜" ,week_attendances_path('dd':@first_day.ago(1.weeks).strftime("%Y%m%d"))%>
-        <%= link_to "＞" ,week_attendances_path('dd':@first_day.since(1.weeks).strftime("%Y%m%d"))%>
+    <div class="ue">
+        <%= link_to "＜" ,week_attendances_path('dd':@first_day.ago(1.weeks).strftime("%Y%m%d")), class:"yazirusi"%>
+        <%= link_to "＞" ,week_attendances_path('dd':@first_day.since(1.weeks).strftime("%Y%m%d")), class:"yazirusi mar"%>
     </div>
 
-    <% (@first_day.to_date..@last_day.to_date).each do |week| %>
-            <%= week.strftime("#{@dw[week.wday]}") %>
-            <%= week %>
-            <!-- 下記の全角空白は日付を見やすくするため、CSSで整えるまで(仮)で書いてます。 -->
-            　　
-    <% end %>
+    <table class="table table-striped-columns">
+        <thead>
+            <tr>
+                <% (@first_day.to_date..@last_day.to_date).each do |week| %>
+                    <th>
+                        <%= week.strftime("#{@dw[week.wday]}") %><br />
+                        <%= week %>
+                    </th>
+                <% end %>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>うえだ</td>
+                <td>うぇだ</td>
+                <td>ウエダ</td>
+                <td>上田</td>
+                <td>うぇーだ</td>
+                <td>うぇ</td>
+                <td>うぇうぇだ</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
