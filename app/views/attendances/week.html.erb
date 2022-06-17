@@ -42,6 +42,7 @@
             <% @attendance = Attendance.includes(:attendance_details).references(:attendance_details).find_by(base_date:week, employee_id:@employee.id) %>
                 <tr>
                     <!--<td><%= @attendance %></td>-->
+                    <!-- @attendanceの情報を持ってこれない＆週の横表示出来ていない(table設定？) -->
                     <td>うえだ</td>
                 </tr>
             </tbody>
