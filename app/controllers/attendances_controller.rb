@@ -1,5 +1,5 @@
 class AttendancesController < ApplicationController
-  before_action :set_attendance, only: %i[ show edit update destroy ]
+  before_action :set_attendance, only: %i[show edit update destroy]
 
   # GET /attendances or /attendances.json
   def index
@@ -7,15 +7,24 @@ class AttendancesController < ApplicationController
   end
 
   # GET /attendances/1 or /attendances/1.json
-  def show
+  def show; end
+
+  def month
+    month = params['yyyyMM'].blank? ? Time.zone.now.strftime('%Y%m') : params['yyyyMM']
+    @month_date = (month + '01').to_date
+    @dw = ["日", "月", "火", "水", "木", "金", "土"]
+    #@employee = current_employee
+    @employee = Employee.first
+
+    @corporation = Corporation.find(@employee.corporation.id)
+
+    # @attendances = Attendance.includes(:attendance_details).references(:attendance_details).where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id)
+
+    # @orders = Order.where(corporation_id: @corporation.id, expiration_date: @month_date.beginning_of_month..Float::INFINITY)
+
   end
 
-  # GET /attendances/1/YYYYMM or /attendances/1/YYYYMM.json
-  def month
-  end
-    
-  def week
-  end
+  def week; end
 
   # GET /attendances/new
   def new
@@ -23,8 +32,7 @@ class AttendancesController < ApplicationController
   end
 
   # GET /attendances/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /attendances or /attendances.json
   def create
@@ -32,7 +40,7 @@ class AttendancesController < ApplicationController
 
     respond_to do |format|
       if @attendance.save
-        format.html { redirect_to attendance_url(@attendance), notice: "Attendance was successfully created." }
+        format.html { redirect_to attendance_url(@attendance), notice: 'Attendance was successfully created.' }
         format.json { render :show, status: :created, location: @attendance }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -45,7 +53,7 @@ class AttendancesController < ApplicationController
   def update
     respond_to do |format|
       if @attendance.update(attendance_params)
-        format.html { redirect_to attendance_url(@attendance), notice: "Attendance was successfully updated." }
+        format.html { redirect_to attendance_url(@attendance), notice: 'Attendance was successfully updated.' }
         format.json { render :show, status: :ok, location: @attendance }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -59,23 +67,20 @@ class AttendancesController < ApplicationController
     @attendance.destroy
 
     respond_to do |format|
-      format.html { redirect_to attendances_url, notice: "Attendance was successfully destroyed." }
+      format.html { redirect_to attendances_url, notice: 'Attendance was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_attendance
-      @attendance = Attendance.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def attendance_params
-      params.require(:attendance).permit(:corporation_id, :employee_id, :start_time, :end_time, :rest_time, :work_content)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_attendance
+    @attendance = Attendance.find(params[:id])
+  end
 
-    def month_params
-      
-    end
+  # Only allow a list of trusted parameters through.
+  def attendance_params
+    params.require(:attendance).permit(:corporation_id, :employee_id, :start_time, :end_time, :rest_time, :work_content)
+  end
 end

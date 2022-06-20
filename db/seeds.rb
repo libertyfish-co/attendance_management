@@ -135,7 +135,7 @@ Order.create!(
 	name: "有効期限切れテスト会社",
 	itemized_time: 0,
 	display_flg: 0,
-	expiration_date: Date.today.prev_month
+	expiration_date: Time.zone.now.prev_month
 )
 
 order5 = Order.create!(
@@ -223,7 +223,7 @@ Employee.create!(
 	invalid_flag: false
 )
 
-date = Time.current
+date = Time.zone.now
 # 作業 ＋ 休憩 ＋ 有給(一般)
 attendance1 = Attendance.create!(
 	employee_id: employee1.id,

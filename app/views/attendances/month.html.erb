@@ -1,0 +1,112 @@
+
+<%= link_to @month_date.prev_month.strftime("%Y/%m"), month_attendances_path('yyyyMM': @month_date.prev_month.strftime("%Y%m")) %>
+<%= @month_date.strftime("%Y/%m") %>
+<%= link_to @month_date.next_month.strftime("%Y/%m"), month_attendances_path('yyyyMM': @month_date.next_month.strftime("%Y%m")) %>
+
+<p id="test">jQueryでーーーーーす</p>
+    <p class="hoge">色を変えまーーーーーーーす</p>
+    <h1>はい</h1>
+<table>
+            <thead>
+                <tr>
+                    <th rowspan="2", colspan="1">日</th>
+                    <th rowspan="2", colspan="1">曜日</th>
+                    <th rowspan="2", colspan="3">時刻</th>
+                    <th rowspan="1", colspan="7">時間内訳</th>
+                    <th rowspan="2", colspan="1">摘要</th>
+                </tr>
+                <tr>
+                    <th rowspan="1", colspan="1">作業</th>
+                    <th rowspan="1", colspan="1">休憩</th>
+                    <th rowspan="1", colspan="1">稼働</th>
+                    <th rowspan="1", colspan="1">有給(一般)</th>
+                    <th rowspan="1", colspan="1">有給(特別)</th>
+                    <th rowspan="1", colspan="1">実働</th>
+                    <th rowspan="1", colspan="1">控除</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% (@month_date.beginning_of_month..@month_date.end_of_month).each do |month| %>
+                    <% @attendance = Attendance.includes(:attendance_details).references(:attendance_details).find_by(base_date: month, employee_id: @employee.id) %>
+                    <% if @attendance.blank? %>
+                        <tr data-href="/attendances/new">
+                            <td><%= month.strftime("%d") %></td>
+                            <td><%= month.strftime("#{@dw[month.wday]}") %></td>
+                            <td></td>
+                            <td>～</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    <% else %>
+                        <tr data-href="/attendances/#{@attendance.id}/edit">
+                            <td><%= month.strftime("%d") %></td>
+                            <td><%= month.strftime("#{@dw[month.wday]}") %></td>
+                            <td><%= @attendance.start_time.strftime("%R") %></td>
+                            <td>～</td>
+                            <td><%= @attendance.end_time.strftime("%R") %></td>
+                            <td><%#= Time.at(@attendance.operating_time * 60).strftime("%R") %></td>
+                            <td><%= Time.at(@attendance.break_time * 60).strftime("%R") %></td>
+                            <td>ueda</td>
+                            <td>ueda</td>
+                            <td>ueda</td>
+                            <td>ueda</td>
+                            <td><%= @attendance.attendance_details.map {|detail| detail.order.name } %></td>
+                        </tr>
+                    <% end %>
+                        
+                            <%# <tr data-href="/attendances/new">
+                            <td></td>
+                            <td><%= month.strftime("%d") %></td>
+                            <%#<td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td> %>
+                <% end %>
+            </tbody>
+        </table>
+    <style>
+	td, th {
+            padding: 5px 10px;
+        }
+ 
+        thead th {
+            background: #110303;
+            color: #fff;
+        }
+ 
+        tbody tr {
+            border-bottom: 1px dotted #D8D5D5;
+        }
+ 
+        tbody td {
+            border: 1px dotted #D8D5D5;
+            border-width: 0px 1px;
+            -webkit-transition: background-color .1s linear;
+            -moz-transition: background-color .1s linear;
+            transition: background-color .1s linear;
+        }
+ 
+        tbody tr:first-child {
+            border-top: none;
+        }
+ 
+        tbody tr.even td {
+            background: #fbfbfb;
+        }
+ 
+        tbody tr.clickable:hover td {
+            background: #ecf2fa;
+            cursor: pointer;
+        }
+</style>
