@@ -1,21 +1,34 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title></title>
-  <%= csrf_meta_tags %>
-  <style>
-  .login_header{
-    height:40px;
-    margin-bottom:7%;
-    background-color:rgba(56, 96, 178, 1);
-  }
-  </style>
-</head>
-<body>
+  <head>
+    <title>ログイン</title>
+    <%= csp_meta_tag %>
+    <%= csrf_meta_tags %>
+    <style>
+    .login_header{
+      height:40px;
+      margin-bottom:7%;
+      background-color:rgba(56, 96, 178, 1);
+    }
 
-<div class="login_header"></div>
+    .notice,
+    .alert{
+      margin:0 auto;
+      width:400px;
+      text-align:center;
+      color:red;
+      margin-bottom:20px;
+    }
+    </style>
+  </head>
 
-<%= yield %>
+  <body>
+    <div class="login_header"></div>
+    <%# deivseのフラッシュメッセージを表示 %>
+    <p class="notice"><%= notice %></p>
+    <p class="alert"><%= alert %></p>
 
-</body>
+    <%= yield %>
+
+  </body>
 </html>

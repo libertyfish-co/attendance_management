@@ -2,7 +2,7 @@
   <div class="login">
     <div class="field">
       <%= f.label :user_code, "ユーザーコード" %><br />
-      <%= f.email_field :user_code, autofocus: true, autocomplete: "user-code", placeholder: "メールアドレスを入力してください"%>
+      <%= f.text_field :user_code, autofocus: true, autocomplete: "user-code", placeholder: "ユーザーコードを入力してください"%>
     </div>
     <div class="field">
       <%= f.label :password, "パスワード" %><br />
@@ -16,7 +16,7 @@
   <% end %>
 
 <style>
-  input[type="email"],
+  input[type="text"],
   input[type="password"]{
     width:200px;
     height:40px;
@@ -24,7 +24,7 @@
     border-radius: 5px;
   }
 
-  input[type="email"]::placeholder,
+  input[type="text"]::placeholder,
   input[type="password"]::placeholder{
      font-size:12px;
   }
