@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
-  devise_for :employees
+ 
+  devise_for :employees, controllers: {
+    :registrations => 'employees/registrations',
+    :sessions => 'employees/sessions',
+    :passwords => 'employees/passwords'
+  }
   resources :attendances do
     collection do
       get :month
