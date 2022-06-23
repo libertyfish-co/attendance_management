@@ -10,15 +10,17 @@ class AttendancesController < ApplicationController
   def show; end
 
   def month
-    month = params['yyyyMM'].blank? ? Time.zone.now.strftime('%Y%m') : params['yyyyMM']
+    month = params['date'].blank? ? Time.zone.now.strftime('%Y%m') : params['date']
     @month_date = (month + '01').to_date
+    @nav_prev = @month_date.prev_month.strftime("%Y%m")
+    @nav_next = @month_date.next_month.strftime("%Y%m")
     @dw = ["日", "月", "火", "水", "木", "金", "土"]
     #@employee = current_employee
     @employee = Employee.first
-
+    @attendances = @employee.attendances.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).includes(:attendance_details).references(:attendance_details).order(base_date: "ASC")
+    @array = @attendances.to_a.first
+    
     @corporation = Corporation.find(@employee.corporation.id)
-
-    # @attendances = Attendance.includes(:attendance_details).references(:attendance_details).where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id)
 
     # @orders = Order.where(corporation_id: @corporation.id, expiration_date: @month_date.beginning_of_month..Float::INFINITY)
 

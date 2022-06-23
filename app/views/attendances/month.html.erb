@@ -1,7 +1,7 @@
 
-<%= link_to @month_date.prev_month.strftime("%Y/%m"), month_attendances_path('yyyyMM': @month_date.prev_month.strftime("%Y%m")) %>
+<%= link_to @month_date.prev_month.strftime("%Y/%m"), month_attendances_path('date': @nav_prev) %>
 <%= @month_date.strftime("%Y/%m") %>
-<%= link_to @month_date.next_month.strftime("%Y/%m"), month_attendances_path('yyyyMM': @month_date.next_month.strftime("%Y%m")) %>
+<%= link_to @month_date.next_month.strftime("%Y/%m"), month_attendances_path('date': @nav_next) %>
 
 <p id="test">jQueryでーーーーーす</p>
     <p class="hoge">色を変えまーーーーーーーす</p>
@@ -27,9 +27,9 @@
             </thead>
             <tbody>
                 <% (@month_date.beginning_of_month..@month_date.end_of_month).each do |month| %>
-                    <% @attendance = Attendance.includes(:attendance_details).references(:attendance_details).find_by(base_date: month, employee_id: @employee.id) %>
-                    <% if @attendance.blank? %>
-                        <tr data-href="/attendances/new">
+                
+                    <% unless @array.base_date == month %>
+                        <tr data-href="/attendances/new"('date': @month_date.next_month.strftime("%Y%m"))>
                             <td><%= month.strftime("%d") %></td>
                             <td><%= month.strftime("#{@dw[month.wday]}") %></td>
                             <td></td>
@@ -44,34 +44,36 @@
                             <td></td>
                         </tr>
                     <% else %>
-                        <tr data-href="/attendances/#{@attendance.id}/edit">
+                        <tr data-href="/attendances/new">
                             <td><%= month.strftime("%d") %></td>
                             <td><%= month.strftime("#{@dw[month.wday]}") %></td>
-                            <td><%= @attendance.start_time.strftime("%R") %></td>
+                            <td><%= @array.start_time.strftime("%R") %></td>
                             <td>～</td>
-                            <td><%= @attendance.end_time.strftime("%R") %></td>
-                            <td><%#= Time.at(@attendance.operating_time * 60).strftime("%R") %></td>
-                            <td><%= Time.at(@attendance.break_time * 60).strftime("%R") %></td>
+                            <td><%= @array.end_time.strftime("%R") %></td>
+                            <% if @array.operating_time.present? %>  <!-- 作業時間がない場合は空白にする。以下休憩、有給、実働、稼働、控除等も同様 -->
+                                <td><%= Time.at(@array.operating_time * 60).strftime("%R") %></td>
+                            <% else %>
+                                <td></td>
+                            <% end %>
+                            <% if @array.break_time.present? %> 
+                                <td><%= Time.at(@array.break_time * 60).strftime("%R") %></td>
+                            <% else %>
+                                <td></td>
+                            <% end %>
+                            <% if @array.break_time.present? && @array.operating_time.present? %> 
+                                <td><%= Time.at((@array.operating_time - @array.break_time) * 60).strftime("%R") %></td>
+                            <% elsif @array.operating_time.present? && @array.break_time.blank? %>
+                                <td><%= Time.at(array.operating_time * 60).strftime("%R") %></td>
+                            <% else %>
+                                <td></td>
+                            <% end %>
                             <td>ueda</td>
                             <td>ueda</td>
                             <td>ueda</td>
                             <td>ueda</td>
-                            <td><%= @attendance.attendance_details.map {|detail| detail.order.name } %></td>
+                            <td><%= @array.attendance_details.map {|detail| detail.order.name } %></td>
                         </tr>
                     <% end %>
-                        
-                            <%# <tr data-href="/attendances/new">
-                            <td></td>
-                            <td><%= month.strftime("%d") %></td>
-                            <%#<td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td> %>
                 <% end %>
             </tbody>
         </table>
