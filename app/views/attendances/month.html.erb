@@ -23,10 +23,11 @@
             </thead>
             <tbody>
                 <% (@month_date.beginning_of_month..@month_date.end_of_month).each do |month| %>
-                <% array = @array.shift() %>
-                <% if array.present? %>
-                    <% unless array.base_date == month %>
-                        <tr data-href="/attendances/new"('date': @month_date.next_month.strftime("%Y%m"))>
+                <% attendance = @attendance_array.shift() %>
+                <% if attendance.present? %>
+                    <% unless attendance.base_date == month %>
+                        <!-- 勤怠登録に飛ぶ際にURLパラメータで日付情報を送る-->
+                        <tr data-href="/attendances/new"('date': @month_date.next_month.strftime("%Y%m%d"))>
                             <td><%= month.strftime("%d") %></td>
                             <td><%= month.strftime("#{@dw[month.wday]}") %></td>
                             <td></td>
@@ -41,51 +42,60 @@
                             <td></td>
                         </tr>
                     <% else %>
-                        <tr data-href="/attendances/new">
+                        <tr data-href="/attendances/new('date': @month_date.next_month.strftime("%Y%m%d"))">
                             <td><%= month.strftime("%d") %></td>
                             <td><%= month.strftime("#{@dw[month.wday]}") %></td>
-                            <td><%= array.start_time.strftime("%R") %></td>
+                            <td><%= attendance.start_time.strftime("%R") %></td>
                             <td>～</td>
-                            <td><%= array.end_time.strftime("%R") %></td>
-                            <% if array.break_time.present? && array.operating_time.present? %> <!-- 稼働時間がない場合は空白にする。作業＝稼働＋休憩だが、稼働がない場合は表示しない。 -->
-                                <td class="sagyo"><%= Time.at((array.operating_time + array.break_time) * 60).strftime("%R") %></td>
-                            <% elsif array.operating_time.present? && array.break_time.blank? %>
-                                <td class="sagyo"><%= Time.at(array.operating_time * 60).strftime("%R") %></td>
-                            <% else %>
-                                <td></td>
-                            <% end %>
-                            <% if array.break_time.present? && array.operating_time.present? %> <!-- 休憩時間が存在しても稼働時間がなければ表示しない -->
-                                <td class="sagyo"><%= Time.at(array.break_time * 60).strftime("%R") %></td>
-                            <% else %>
-                                <td></td>
-                            <% end %>
-                            <% if array.operating_time.present? %>  
-                                <td class="sagyo"><%= Time.at(array.operating_time * 60).strftime("%R") %></td>
+                            <td><%= attendance.end_time.strftime("%R") %></td>
+
+                            <!-- 稼働時間がない場合は空白にする。作業＝稼働＋休憩だが、稼働がない場合は休憩があっても表示しない。 -->
+                            <% if attendance.break_time.present? && attendance.operating_time.present? %>
+                                <td><%= sprintf("%10.2f", ((attendance.operating_time + attendance.break_time) / 60)) %></td>
+                            <% elsif attendance.operating_time.present? && attendance.break_time.blank? %>
+                                <td><%= sprintf("%10.2f", (attendance.operating_time / 60)) %></td>
                             <% else %>
                                 <td></td>
                             <% end %>
                             
-                            <% if array.paid_time.present? %>  
-                                <td class="sagyo"><%= Time.at(array.paid_time * 60).strftime("%R") %></td>
+                            <!-- 休憩時間が存在しても稼働時間がなければ表示しない -->
+                            <% if attendance.break_time.present? && attendance.operating_time.present? %> 
+                                <td><%= sprintf("%10.2f", (attendance.break_time / 60)) %></td>
                             <% else %>
                                 <td></td>
                             <% end %>
-                            <% if array.special_paid_time.present? %>  
-                                <td class="sagyo"><%= Time.at(array.special_paid_time * 60).strftime("%R") %></td>
+
+                            <% if attendance.operating_time.present? %>  
+                                <td><%= sprintf("%10.2f", (attendance.operating_time / 60)) %></td>
                             <% else %>
                                 <td></td>
                             <% end %>
-                            <% if array&.paid_time.present? || array&.operating_time.present? || array&.special_paid_time.present? %> <!-- 実働＝稼働＋有給（一般）＋有給（特別）。どれかの値がnillの可能性もあるので分岐 -->
-                                <td class="sagyo"><%= Time.at((array.operating_time.to_i + array.paid_time.to_i + array.special_paid_time.to_i) * 60).strftime("%R") %></td> <!-- nilの場合０に換算して計算するようにしている。 -->
+                            
+                            <% if attendance.paid_time.present? %>  
+                                <td><%= sprintf("%10.2f", (attendance.paid_time / 60)) %></td>
                             <% else %>
                                 <td></td>
                             <% end %>
-                            <% if array.deduction_time.present? %>  
-                                <td class="sagyo"><%= Time.at(array.deduction_time * 60).strftime("%R") %></td>
+
+                            <% if attendance.special_paid_time.present? %>  
+                                <td><%= sprintf("%10.2f", (attendance.special_paid_time / 60)) %></td>
                             <% else %>
                                 <td></td>
                             <% end %>
-                            <td><%= array.attendance_details.map {|detail| detail.order.name } %></td>
+
+                            <% if attendance&.paid_time.present? || attendance&.operating_time.present? || attendance&.special_paid_time.present? %> <!-- 実働＝稼働＋有給（一般）＋有給（特別）。どれかの値がnillの可能性もあるので分岐 -->
+                                <td><%= sprintf("%10.2f", ((attendance.operating_time.to_i + attendance.paid_time.to_i + attendance.special_paid_time.to_i) / 60)) %></td> <!-- nilの場合０に換算して計算するようにしている。 -->
+                            <% else %>
+                                <td></td>
+                            <% end %>
+
+                            <% if attendance.deduction_time.present? %>  
+                                <td><%= sprintf("%10.2f", (attendance.deduction_time / 60)) %></td>
+                            <% else %>
+                                <td></td>
+                            <% end %>
+
+                            <td><%= attendance.attendance_details.map {|detail| detail.order.name } %></td>
                         </tr>
                     <% end %>
                 <% else %>
@@ -108,39 +118,54 @@
                 <tr></tr>
                 <tr>
                     <td colspan = "5">合計</td>
-                    <% if @sum_work_time.present? %>
-                        <td><%= @sum_work_time / 60 %></td>
+
+                    <% if @sum_work_time != 0 %>
+                        <td><%= sprintf("%10.2f", (@sum_work_time / 60)) %></td>
                     <% else %>
                         <td></td>
                     <% end %>
-                    <% if @sum_break_time.present? %>
-                        <td><%= @sum_break_time / 60 %></td>
+
+                    <% if @sum_break_time != 0 %>
+                        <td><%= sprintf("%10.2f", (@sum_break_time / 60)) %></td>
                     <% else %>
                         <td></td>
                     <% end %>
-                    <% if @sum_operating_time.present? %>
-                        <td><%= @sum_operating_time / 60 %></td>
+
+                    <% if @sum_operating_time != 0 %>
+                        <td><%= sprintf("%10.2f", (@sum_operating_time / 60)) %></td>
                     <% else %>
                         <td></td>
                     <% end %>
-                    <% if @sum_paid_time.present? %>
-                        <td><%= @sum_paid_time / 60 %></td>
+
+                    <% if @sum_paid_time != 0 %>
+                        <td><%= sprintf("%10.2f", (@sum_paid_time / 60)) %></td>
                     <% else %>
                         <td></td>
                     <% end %>
-                    <% if @sum_special_paid_time.present? %>
-                        <td><%= @sum_special_paid_time / 60 %></td>
+
+                    <% if @sum_special_paid_time != 0 %>
+                        <td><%= sprintf("%10.2f", (@sum_special_paid_time / 60)) %></td>
                     <% else %>
                         <td></td>
                     <% end %>
-                    <% if @sum_deduction_time.present? %>
-                        <td><%= @sum_deduction_time / 60 %></td>
+
+                    <% if @sum_actual_time != 0 %>
+                        <td><%= sprintf("%10.2f", (@sum_actual_time / 60)) %></td>
+                    <% else %>
+                        <td></td>
+                    <% end %>
+
+                    <% if @sum_deduction_time != 0 %>
+                        <td><%= sprintf("%10.2f", (@sum_deduction_time / 60)) %></td>
                     <% else %>
                         <td></td>
                     <% end %>
                 </tr>
             </tbody>
         </table>
+        <button type="button">チェック</button>
+        <button type="button">帳簿出力</button>
+        <button type="button">オーダー別</button>
     <style>
 	td, th {
             padding: 5px 10px;

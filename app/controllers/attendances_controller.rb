@@ -20,13 +20,13 @@ class AttendancesController < ApplicationController
     #@employee = current_employee
     @employee = Employee.first
     @attendances = @employee.attendances.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).includes(:attendance_details).references(:attendance_details).order(base_date: "ASC")
-    @array = @attendances.to_a
+    @attendance_array = @attendances.to_a
 
     # それぞれの合計時間を出す
-    # 作業
-    @sum_work_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:operating_time) + Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).where.not(operating_time: nil).all.sum(:break_time) # 作業時間。休憩は稼働がないときは表に表示させないようにしているため、計算対象に入らないので稼働があるときのみ加算
+    # 作業 休憩は稼働がないときは表に表示させないようにしているため、計算対象に入らないので稼働があるときのみ加算
+    @sum_work_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:operating_time) + Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).where.not(operating_time: nil).all.sum(:break_time) 
 
-    # 休憩
+    # 休憩 稼働がなければ表示しないため稼働があるときのみ加算
     @sum_break_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).where.not(operating_time: nil).all.sum(:break_time)
 
     # 稼働
@@ -39,10 +39,10 @@ class AttendancesController < ApplicationController
     @sum_special_paid_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:special_paid_time)
 
     # 実働
-    @sum_actual_time = 
+    @sum_actual_time = @sum_work_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:operating_time) + Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:paid_time) + Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:special_paid_time)
 
     # 控除
-    @deduction_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:deduction_time)
+    @sum_deduction_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:deduction_time)
 
 
     @corporation = Corporation.find(@employee.corporation.id)
