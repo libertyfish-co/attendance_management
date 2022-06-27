@@ -17,8 +17,8 @@ class AttendancesController < ApplicationController
     @nav_prev = @month_date.prev_month.strftime("%Y%m")
     @nav_next = @month_date.next_month.strftime("%Y%m")
     @dw = ["日", "月", "火", "水", "木", "金", "土"]
-    #@employee = current_employee
-    @employee = Employee.first
+    @employee = current_employee
+    
     @attendances = @employee.attendances.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).includes(:attendance_details).references(:attendance_details).order(base_date: "ASC")
     @attendance_array = @attendances.to_a
 
