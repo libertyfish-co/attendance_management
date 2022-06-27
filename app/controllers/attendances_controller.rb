@@ -12,6 +12,40 @@ class AttendancesController < ApplicationController
 
   # GET /attendances/1/YYYYMM or /attendances/1/YYYYMM.json
   def month
+    month = params['date'].blank? ? Time.zone.now.strftime('%Y%m') : params['date']
+    @month_date = (month + '01').to_date
+    @nav_prev = @month_date.prev_month.strftime("%Y%m")
+    @nav_next = @month_date.next_month.strftime("%Y%m")
+    @dw = ["日", "月", "火", "水", "木", "金", "土"]
+    #@employee = current_employee
+    @employee = Employee.first
+    @attendances = @employee.attendances.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).includes(:attendance_details).references(:attendance_details).order(base_date: "ASC")
+    @array = @attendances.to_a
+
+    # それぞれの合計時間を出す
+    # 作業
+    @sum_work_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:operating_time) + Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).where.not(operating_time: nil).all.sum(:break_time) # 作業時間。休憩は稼働がないときは表に表示させないようにしているため、計算対象に入らないので稼働があるときのみ加算
+
+    # 休憩
+    @sum_break_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).where.not(operating_time: nil).all.sum(:break_time)
+
+    # 稼働
+    @sum_operating_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:operating_time)
+
+    # 有給一般
+    @sum_paid_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:paid_time)
+
+    # 有給特別
+    @sum_special_paid_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:special_paid_time)
+
+    # 実働
+    @sum_actual_time = 
+
+    # 控除
+    @deduction_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:deduction_time)
+
+
+    @corporation = Corporation.find(@employee.corporation.id)
   end
     
   def week

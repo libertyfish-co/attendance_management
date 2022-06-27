@@ -1,0 +1,178 @@
+<%= link_to @month_date.prev_month.strftime("%Y/%m"), month_attendances_path('date': @nav_prev) %>
+<%= @month_date.strftime("%Y/%m") %>
+<%= link_to @month_date.next_month.strftime("%Y/%m"), month_attendances_path('date': @nav_next) %>
+
+<table>
+            <thead>
+                <tr>
+                    <th rowspan="2", colspan="1">日</th>
+                    <th rowspan="2", colspan="1">曜日</th>
+                    <th rowspan="2", colspan="3">時刻</th>
+                    <th rowspan="1", colspan="7">時間内訳</th>
+                    <th rowspan="2", colspan="1">摘要</th>
+                </tr>
+                <tr>
+                    <th rowspan="1", colspan="1">作業</th>
+                    <th rowspan="1", colspan="1">休憩</th>
+                    <th rowspan="1", colspan="1">稼働</th>
+                    <th rowspan="1", colspan="1">有給(一般)</th>
+                    <th rowspan="1", colspan="1">有給(特別)</th>
+                    <th rowspan="1", colspan="1">実働</th>
+                    <th rowspan="1", colspan="1">控除</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% (@month_date.beginning_of_month..@month_date.end_of_month).each do |month| %>
+                <% array = @array.shift() %>
+                <% if array.present? %>
+                    <% unless array.base_date == month %>
+                        <tr data-href="/attendances/new"('date': @month_date.next_month.strftime("%Y%m"))>
+                            <td><%= month.strftime("%d") %></td>
+                            <td><%= month.strftime("#{@dw[month.wday]}") %></td>
+                            <td></td>
+                            <td>～</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    <% else %>
+                        <tr data-href="/attendances/new">
+                            <td><%= month.strftime("%d") %></td>
+                            <td><%= month.strftime("#{@dw[month.wday]}") %></td>
+                            <td><%= array.start_time.strftime("%R") %></td>
+                            <td>～</td>
+                            <td><%= array.end_time.strftime("%R") %></td>
+                            <% if array.break_time.present? && array.operating_time.present? %> <!-- 稼働時間がない場合は空白にする。作業＝稼働＋休憩だが、稼働がない場合は表示しない。 -->
+                                <td class="sagyo"><%= Time.at((array.operating_time + array.break_time) * 60).strftime("%R") %></td>
+                            <% elsif array.operating_time.present? && array.break_time.blank? %>
+                                <td class="sagyo"><%= Time.at(array.operating_time * 60).strftime("%R") %></td>
+                            <% else %>
+                                <td></td>
+                            <% end %>
+                            <% if array.break_time.present? && array.operating_time.present? %> <!-- 休憩時間が存在しても稼働時間がなければ表示しない -->
+                                <td class="sagyo"><%= Time.at(array.break_time * 60).strftime("%R") %></td>
+                            <% else %>
+                                <td></td>
+                            <% end %>
+                            <% if array.operating_time.present? %>  
+                                <td class="sagyo"><%= Time.at(array.operating_time * 60).strftime("%R") %></td>
+                            <% else %>
+                                <td></td>
+                            <% end %>
+                            
+                            <% if array.paid_time.present? %>  
+                                <td class="sagyo"><%= Time.at(array.paid_time * 60).strftime("%R") %></td>
+                            <% else %>
+                                <td></td>
+                            <% end %>
+                            <% if array.special_paid_time.present? %>  
+                                <td class="sagyo"><%= Time.at(array.special_paid_time * 60).strftime("%R") %></td>
+                            <% else %>
+                                <td></td>
+                            <% end %>
+                            <% if array&.paid_time.present? || array&.operating_time.present? || array&.special_paid_time.present? %> <!-- 実働＝稼働＋有給（一般）＋有給（特別）。どれかの値がnillの可能性もあるので分岐 -->
+                                <td class="sagyo"><%= Time.at((array.operating_time.to_i + array.paid_time.to_i + array.special_paid_time.to_i) * 60).strftime("%R") %></td> <!-- nilの場合０に換算して計算するようにしている。 -->
+                            <% else %>
+                                <td></td>
+                            <% end %>
+                            <% if array.deduction_time.present? %>  
+                                <td class="sagyo"><%= Time.at(array.deduction_time * 60).strftime("%R") %></td>
+                            <% else %>
+                                <td></td>
+                            <% end %>
+                            <td><%= array.attendance_details.map {|detail| detail.order.name } %></td>
+                        </tr>
+                    <% end %>
+                <% else %>
+                    <tr data-href="/attendances/new"('date': @month_date.next_month.strftime("%Y%m"))>
+                            <td><%= month.strftime("%d") %></td>
+                            <td><%= month.strftime("#{@dw[month.wday]}") %></td>
+                            <td></td>
+                            <td>～</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    <% end %>
+                <% end %>
+                <tr></tr>
+                <tr>
+                    <td colspan = "5">合計</td>
+                    <% if @sum_work_time.present? %>
+                        <td><%= @sum_work_time / 60 %></td>
+                    <% else %>
+                        <td></td>
+                    <% end %>
+                    <% if @sum_break_time.present? %>
+                        <td><%= @sum_break_time / 60 %></td>
+                    <% else %>
+                        <td></td>
+                    <% end %>
+                    <% if @sum_operating_time.present? %>
+                        <td><%= @sum_operating_time / 60 %></td>
+                    <% else %>
+                        <td></td>
+                    <% end %>
+                    <% if @sum_paid_time.present? %>
+                        <td><%= @sum_paid_time / 60 %></td>
+                    <% else %>
+                        <td></td>
+                    <% end %>
+                    <% if @sum_special_paid_time.present? %>
+                        <td><%= @sum_special_paid_time / 60 %></td>
+                    <% else %>
+                        <td></td>
+                    <% end %>
+                    <% if @sum_deduction_time.present? %>
+                        <td><%= @sum_deduction_time / 60 %></td>
+                    <% else %>
+                        <td></td>
+                    <% end %>
+                </tr>
+            </tbody>
+        </table>
+    <style>
+	td, th {
+            padding: 5px 10px;
+        }
+ 
+        thead th {
+            background: #110303;
+            color: #fff;
+        }
+ 
+        tbody tr {
+            border-bottom: 1px dotted #D8D5D5;
+        }
+ 
+        tbody td {
+            border: 1px dotted #D8D5D5;
+            border-width: 0px 1px;
+            -webkit-transition: background-color .1s linear;
+            -moz-transition: background-color .1s linear;
+            transition: background-color .1s linear;
+        }
+ 
+        tbody tr:first-child {
+            border-top: none;
+        }
+ 
+        tbody tr.even td {
+            background: #fbfbfb;
+        }
+ 
+        tbody tr.clickable:hover td {
+            background: #ecf2fa;
+            cursor: pointer;
+        }
+</style>
