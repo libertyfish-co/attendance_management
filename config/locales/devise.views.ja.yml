@@ -37,13 +37,14 @@ ja:
     failure:
       already_authenticated: すでにログインしています。
       inactive: アカウントが有効化されていません。メールに記載された手順にしたがって、アカウントを有効化してください。
-      invalid: "認証情報に誤りがあります。"
+      invalid: E02001 認証情報に誤りがあります。
       last_attempt: もう一回誤るとアカウントがロックされます。
       locked: アカウントは凍結されています。
-      not_found_in_database: "認証情報に誤りがあります。"
+      not_found_in_database: E02001 認証情報に誤りがあります。
       timeout: セッションがタイムアウトしました。もう一度ログインしてください。
       unauthenticated: アカウント登録もしくはログインしてください。
       unconfirmed: メールアドレスの本人確認が必要です。
+      deleted_account: E02001 認証情報に誤りがあります。
     mailer:
       confirmation_instructions:
         action: メールアドレスの確認
