@@ -52,14 +52,23 @@ class Attendance < ApplicationRecord
 
   # ************** private ******************
   # Todo
-  # 引数：(string)month_attendance|week_attendance|day_attendance
+  # 引数：(string)month_attendance|week_attendance
   # 返り値：（フィルタされた）勤怠レコードｓ
 
   # 画面ごとに勤怠から必要なデータのみを選出する。
-  def self.filter_by
-
-
+  def self.filter_by(page_name)
+    self.select(nessarry_colmun_of(page_name))
   end
 
-  private_class_method :filter_by
+  # 引数：画面名
+  # 返り値：シンボル配列
+  def self.nessarry_colmun_of(page_name)
+    {
+      'month_attendance': [:start_time, :end_time, :break_time, :operating_time, 
+        :paid_time, :special_paid_time, :deducation_time, :work_content],
+      'week_attendance': []
+    }[page_name]
+  end
+
+  private_class_method :filter_by, :nessarry_colmun_of
 end
