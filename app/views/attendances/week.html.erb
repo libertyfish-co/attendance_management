@@ -1,9 +1,8 @@
 <div>
     <div class="ue">
-        <%= link_to "＜" ,week_attendances_path('dd':@first_day.ago(1.weeks).strftime("%Y%m%d")), class:"yazirusi"%>
-        <%= link_to "＞" ,week_attendances_path('dd':@first_day.since(1.weeks).strftime("%Y%m%d")), class:"yazirusi mar"%>
+        <%= link_to "＜" ,week_attendances_path('date':@first_day.ago(1.weeks).strftime("%Y%m%d")), class:"yazirusi"%>
+        <%= link_to "＞" ,week_attendances_path('date':@first_day.since(1.weeks).strftime("%Y%m%d")), class:"yazirusi mar"%>
     </div>
-
     <table class="table table-striped-columns">
         <thead>
             <tr>
@@ -15,37 +14,14 @@
                 <% end %>
             </tr>
         </thead>
+            
         <tbody>
             <tr>
-                <td>うえだ</td>
-                <td>うぇだ</td>
-                <td>ウエダ</td>
-                <td>上田</td>
-                <td>うぇーだ</td>
-                <td>うぇ</td>
-                <td>うぇうぇだ</td>
+                <% (@first_day.to_date..@last_day.to_date).each do |week| %>
+                <% @attendance = Attendance.includes(:attendance_details).references(:attendance_details).find_by(base_date: Date.today, employee_id: @employee.id) %>
+                    <td>ueda</td>
+                <% end %>
             </tr>
         </tbody>
-    </table>
-
-    <table class="table table-striped-columns">
-        <% (@first_day.to_date..@last_day.to_date).each do |week| %>
-            <thead>
-                <tr>
-                    <th>
-                        <%= week.strftime("#{@dw[week.wday]}") %><br />
-                        <%= week %>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-            <% @attendance = Attendance.includes(:attendance_details).references(:attendance_details).find_by(base_date:week, employee_id:@employee.id) %>
-                <tr>
-                    <!--<td><%= @attendance %></td>-->
-                    <!-- @attendanceの情報を持ってこれない＆週の横表示出来ていない(table設定？) -->
-                    <td>うえだ</td>
-                </tr>
-            </tbody>
-        <% end %>
     </table>
 </div>

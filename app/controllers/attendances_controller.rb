@@ -15,12 +15,13 @@ class AttendancesController < ApplicationController
   end
     
   def week
-    @result = params['dd'].present? ?params['dd']:Time.zone.now.strftime("%d")
+    @result = params['date'].present? ?params['date']:Time.zone.now.strftime("%d")
     @base = @result.to_date
     @first_day = @base.beginning_of_week(:sunday)
     @last_day = @base.end_of_week(:sunday)
     @dw = ["日", "月", "火", "水", "木", "金", "土"]
     @employee = Employee.first
+    # @attendances = @employee.attendances.where(base_date: @first_day..@last_day).includes(:attendance_details).references(:attendance_details)
   end
 
   # GET /attendances/new

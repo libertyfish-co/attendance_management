@@ -338,3 +338,37 @@ AttendanceDetail.create!(
 	end_time: Time.new(date.year, date.month, date.prev_day.day, 18),
 	work_content: 'テスト6'
 )
+
+#週勤怠スクロール確認
+attendance4 = Attendance.create!(
+	employee_id: employee1.id,
+	base_date: Date.new(date.year, 7, 1),
+	start_time: Time.new(date.year, 7, 1, 0),
+	end_time: Time.new(date.year, 7, 1, 23),
+	break_time: 0,
+	operating_time: 1380,
+	work_content: '勤怠備考3'
+)
+
+AttendanceDetail.create!(
+	order_id: order5.id,
+	work_id: work3.id,
+	attendance_id: attendance4.id,
+	start_time: Time.new(date.year, 7, 1, 0),
+	end_time: Time.new(date.year, 7, 1, 23),
+	work_content: 'テスト10'
+)
+
+# 祝日
+calendar1 = BusinessCalendar.create!(
+    corporation_id: corporation.id,
+    date: Date.new(date.year, 7, 18),
+    proparties: 1
+)
+
+# 振り返り休日
+calendar2 = BusinessCalendar.create!(
+    corporation_id: corporation.id,
+    date: Date.new(date.year, 7, 21),
+    proparties: 2
+)
