@@ -19,12 +19,14 @@
         <%= link_to 'ログアウト', destroy_employee_session_path, method: :delete %>
 
         <div class="my-lg-0input-group-prepend header__select__adjust">
-            <select class="form-control" id="exampleFormControlSelect1">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
+            <select class="form-control" id="transitionControlSelect">
+                <option value="/attendances/month">月勤怠表</option>
+                <option value="/attendances/new">勤怠登録</option>
+                <option value="/sale/new">印鑑登録</option>
+                <option value="/patterns">パターン一覧</option>
+                <option value="/seal/new">ハンコ登録</option>
+                <option value="/employees/password/edit">パスワード変更</option>
+                <option value="/employees/sign_out">ログアウト</option>
             </select>
         </div>
     </div>
