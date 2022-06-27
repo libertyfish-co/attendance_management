@@ -104,18 +104,26 @@ ActiveRecord::Schema.define(version: 2022_06_20_040614) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
+<<<<<<< HEAD
+=======
+    t.bigint "department_id", null: false
+>>>>>>> 831f2cb (svhema追加)
     t.string "employee_code", null: false
     t.string "user_code", null: false
     t.string "name", null: false
     t.string "kana", null: false
     t.string "proparties", default: "3", null: false
     t.boolean "invalid_flag", default: false, null: false
+<<<<<<< HEAD
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "department_id", null: false
     t.index ["department_id"], name: "index_employees_on_department_id"
+=======
+>>>>>>> 831f2cb (svhema追加)
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["department_id"], name: "index_employees_on_department_id"
     t.index ["email"], name: "index_employees_on_email", unique: true
     t.index ["reset_password_token"], name: "index_employees_on_reset_password_token", unique: true
   end
@@ -182,6 +190,7 @@ ActiveRecord::Schema.define(version: 2022_06_20_040614) do
   add_foreign_key "attendances", "employees"
   add_foreign_key "business_calendars", "corporations"
   add_foreign_key "departments", "corporations"
+  add_foreign_key "employees", "departments"
   add_foreign_key "orders", "corporations"
   add_foreign_key "pattern_details", "orders"
   add_foreign_key "pattern_details", "patterns"
