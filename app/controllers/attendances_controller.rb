@@ -19,6 +19,7 @@ class AttendancesController < ApplicationController
     @dw = ["日", "月", "火", "水", "木", "金", "土"]
     @employee = current_employee
     
+    
     @corporation = Corporation.find(@employee.corporation.id)
     @attendances = @employee.attendances.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id).includes(:attendance_details).references(:attendance_details).order(base_date: "ASC")
     @attendance_array = @attendances.to_a
@@ -45,10 +46,7 @@ class AttendancesController < ApplicationController
     @sum_actual_time = @sum_work_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id).all.sum(:operating_time) + Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:paid_time) + Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:special_paid_time)
 
     # 控除
-    @sum_deduction_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id.all.sum(:deduction_time)
-
-
-    
+    @sum_deduction_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id).all.sum(:deduction_time)
   end
     
   def week
