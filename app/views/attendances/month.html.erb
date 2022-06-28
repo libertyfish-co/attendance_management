@@ -1,6 +1,6 @@
-<%= link_to @month_date.prev_month.strftime("%Y/%m"), month_attendances_path('date': @nav_prev) %>
-<%= @month_date.strftime("%Y/%m") %>
-<%= link_to @month_date.next_month.strftime("%Y/%m"), month_attendances_path('date': @nav_next) %>
+<%= link_to @month.prev_month.strftime("%Y/%m"), month_attendances_path('date': @nav_prev) %>
+<%= @month.strftime("%Y/%m") %>
+<%= link_to @month.next_month.strftime("%Y/%m"), month_attendances_path('date': @nav_next) %>
 
 <table>
     <thead>
@@ -22,7 +22,7 @@
         </tr>
     </thead>
     <tbody>
-        <% (@month_date.beginning_of_month..@month_date.end_of_month).each do |month| %>
+        <% (@month.beginning_of_month..@month.end_of_month).each do |month| %>
         <tr>
             <td><%= month.strftime("%d") %></td>
             <td><%= month.strftime("#{@dw[month.wday]}") %></td>

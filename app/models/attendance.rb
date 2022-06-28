@@ -17,6 +17,11 @@ class Attendance < ApplicationRecord
     self.includes(:table_names).references(:table_names)
   end
   
+  # 月間勤怠レコード
+  def self.monthly_attendance_record(dt,format,table_names)
+    self.attendances.select_at(dt,format).join_table(table_names)
+  end
+
   # Todo
   # 引数：なし
   # 返り値：
@@ -24,15 +29,14 @@ class Attendance < ApplicationRecord
   #   {work_time,break_time,operating,
   #     paid_time,special_paid_time,
   #     actual_time,deducation_time}
-
   # 作業,休憩,稼働,有給(一般),有給(特別),実働,控除
   # を持ったオブジェクトを返す。
   # Selfから勤怠レコードｓの合計時間を集計する。
   def self.aggregate_time
     result = {}
     # シンボル毎にresultに代入していく
-    [:work_time,:break_time,:operating,:paid_time,
-      :special_paid_time,:actual_time,:deducation_time].each do |symbol|
+    [:break_time,:operating_time,:paid_time,
+      :special_paid_time,:deduction_time].each do |symbol|
         result[symbol] = self.all.sum(symbol)
     end
 
@@ -44,7 +48,6 @@ class Attendance < ApplicationRecord
   # 返り値：オブジェクト配列
   # 例）オブジェクト配列
   # [{start_time,end_time,work_time,beak_time...},{start_time,end_time...}]
-
   # ～に勤怠データを加工する。
   # 月勤怠画面用のデータを加工する。
   # ※勤怠がない日にちも空文字入れて必ず、１～月末までデータをモデル側で作っておく。

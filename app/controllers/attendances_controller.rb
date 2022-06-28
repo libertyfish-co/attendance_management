@@ -12,12 +12,12 @@ class AttendancesController < ApplicationController
 
   # GET /attendances/1/YYYYMM or /attendances/1/YYYYMM.json
   def month
-    month = params['date'] || Time.zone.now
-    @nav_prev = @month_date.prev_month.strftime("%Y%m")
-    @nav_next = @month_date.next_month.strftime("%Y%m")
-    @attendances = @employee.attendances.select_at(month,:month).
-      join_table(:attendance_details).process_in_month
-    @sum = @employee.attendances.select_at(month,:month).aggregate_time
+    @month = params['date'] || Time.zone.now
+    @nav_prev = @month.prev_month.strftime("%Y%m")
+    @nav_next = @month.next_month.strftime("%Y%m")
+    @attendances = @emp.monthly_attendance_record(@month,:month,:attendance_details).
+      order(base_date: "ASC").process_in_month
+    @sum = @emp.attendances.select_at(month,:month).aggregate_time
   end
     
   def week
