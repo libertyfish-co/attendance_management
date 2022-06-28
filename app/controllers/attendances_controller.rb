@@ -19,8 +19,11 @@ class AttendancesController < ApplicationController
     @dw = ["日", "月", "火", "水", "木", "金", "土"]
     @employee = current_employee
     
+    @corporation = Corporation.find(@employee.corporation.id)
     @attendances = @employee.attendances.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id).includes(:attendance_details).references(:attendance_details).order(base_date: "ASC")
     @attendance_array = @attendances.to_a
+
+    @business_calendar = BusinessCalendar.where(date: @month_date.beginning_of_month..@month_date.end_of_month, proparties: 1, corporation_id: @corporation.id).order(date: "ASC")
 
     # それぞれの合計時間を出す
     # 作業 休憩は稼働がないときは表に表示させないようにしているため、計算対象に入らないので稼働があるときのみ加算
@@ -45,7 +48,7 @@ class AttendancesController < ApplicationController
     @sum_deduction_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id.all.sum(:deduction_time)
 
 
-    @corporation = Corporation.find(@employee.corporation.id)
+    
   end
     
   def week
