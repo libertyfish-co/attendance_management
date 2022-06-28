@@ -2,15 +2,21 @@ class Attendance < ApplicationRecord
   belongs_to :employee
   has_many :attendance_details
 
-  # Todo
-  # 引数：（string） month|week|day
-  # 返り値：勤怠レコードｓ
 
-  # 月・週・日の勤怠をbase_dateから検索し、取得
-  def self.get_attendances_at
-
+  # 基準日から勤怠を検索する。
+  def self.select_at(dt,format)
+    {
+      month: self.where(base_date: dt.beginning_of_month..dt.end_of_month),
+      week: self.where(base_date: dt.beginning_of_week..dt.end_of_week),
+      day: self.where(base_date: dt.beginning_of_day..dt.end_of_day)
+    }[format]
   end
 
+  # テーブル結合
+  def self.join_table(table_names)
+    self.includes(:table_names).references(:table_names)
+  end
+  
   # Todo
   # 引数：なし
   # 返り値：
@@ -23,8 +29,14 @@ class Attendance < ApplicationRecord
   # を持ったオブジェクトを返す。
   # Selfから勤怠レコードｓの合計時間を集計する。
   def self.aggregate_time_of
+    result = {}
+    # シンボル毎にresultに代入していく
+    [:work_time,:break_time,:operating,:paid_time,
+      :special_paid_time,:actual_time,:deducation_time].each do |symbol|
+        result[symbol] = self.all.sum(symbol)
+    end
 
-
+    return result
   end
 
   # Todo
