@@ -19,7 +19,7 @@ class Attendance < ApplicationRecord
   
   # 月間勤怠レコード
   def self.monthly_attendance_record(dt,format,table_names)
-    self.attendances.select_at(dt,format).join_table(table_names)
+    self.select_at(dt,format).join_table(table_names)
   end
 
   # Todo
@@ -39,6 +39,11 @@ class Attendance < ApplicationRecord
       :special_paid_time,:deduction_time].each do |symbol|
         result[symbol] = self.all.sum(symbol)
     end
+
+    # work_time,actual_time 
+    nil_operating_time = self.where.not(operating_time: nil).all.sum(:break_time)
+    result[:work_time] = result[:operating_time]+nil_operating_time
+    result[:actual_time] = result[:operating_time]+result[:paid_time]+result[:special_paid_time]
 
     return result
   end

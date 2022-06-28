@@ -3,23 +3,23 @@ class AttendancesController < ApplicationController
 
   # GET /attendances or /attendances.json
   def index
-    @attendances = Attendance.all
+    @month = params['date'].blank? ? 
+      Time.zone.now : Time.parse(params['date'])
+
+    @nav_prev = @month.prev_month.strftime("%Y%m")
+
+    @nav_next = @month.next_month.strftime("%Y%m")
+
+    @attendances = @emp.attendances.monthly_attendance_record(@month,:month,:attendance_details).
+      order(base_date: "ASC").process_in_month
+
+    @sum = @emp.attendances.select_at(@month,:month).aggregate_time
   end
 
   # GET /attendances/1 or /attendances/1.json
   def show
   end
-
-  # GET /attendances/1/YYYYMM or /attendances/1/YYYYMM.json
-  def month
-    @month = params['date'] || Time.zone.now
-    @nav_prev = @month.prev_month.strftime("%Y%m")
-    @nav_next = @month.next_month.strftime("%Y%m")
-    @attendances = @emp.monthly_attendance_record(@month,:month,:attendance_details).
-      order(base_date: "ASC").process_in_month
-    @sum = @emp.attendances.select_at(month,:month).aggregate_time
-  end
-    
+  
   def week
   end
 
