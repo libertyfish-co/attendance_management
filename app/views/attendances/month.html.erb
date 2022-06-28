@@ -26,7 +26,7 @@
                 <% attendance = @attendance_array.shift() %>
                 <% if attendance.present? %>
                     <% unless attendance.base_date == month %>
-                        <!-- 勤怠登録画面へのリンク（URLパラメータ付き -->
+                        <!-- 勤怠登録画面へのリンク（URLパラメータ付き)（未完成） -->
                         <tr>
                             <td><%= month.strftime("%d") %></td>
                             <td><%= month.strftime("#{@dw[month.wday]}") %></td>
@@ -42,7 +42,7 @@
                             <td></td>
                         </tr>
                     <% else %>
-                        <!-- 勤怠登録画面へのリンク（URLパラメータ付き）-->
+                        <!-- 勤怠登録画面へのリンク（URLパラメータ付き）（未完成）-->
                         <tr>
                             <td><%= month.strftime("%d") %></td>
                             <td><%= month.strftime("#{@dw[month.wday]}") %></td>
@@ -100,7 +100,7 @@
                         </tr>
                     <% end %>
                 <% else %>
-                    <!-- 勤怠登録画面へのリンク（URLパラメータ付き）-->
+                    <!-- 勤怠登録画面へのリンク（URLパラメータ付き）（未完成）-->
                     <tr>
                             <td><%= month.strftime("%d") %></td>
                             <td><%= month.strftime("#{@dw[month.wday]}") %></td>
