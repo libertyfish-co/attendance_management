@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_20_040614) do
+ActiveRecord::Schema.define(version: 2022_06_28_052809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(version: 2022_06_20_040614) do
     t.boolean "consistency_flg"
     t.boolean "approval_flg"
     t.boolean "lock_flg"
+    t.index ["employee_id", "base_date"], name: "index_attendances_on_employee_id_and_base_date", unique: true
     t.index ["employee_id"], name: "index_attendances_on_employee_id"
   end
 
@@ -104,7 +105,6 @@ ActiveRecord::Schema.define(version: 2022_06_20_040614) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.bigint "department_id", null: false
     t.string "employee_code", null: false
     t.string "user_code", null: false
     t.string "name", null: false
@@ -114,9 +114,6 @@ ActiveRecord::Schema.define(version: 2022_06_20_040614) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "department_id", null: false
-    t.index ["department_id"], name: "index_employees_on_department_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["department_id"], name: "index_employees_on_department_id"
     t.index ["email"], name: "index_employees_on_email", unique: true
     t.index ["reset_password_token"], name: "index_employees_on_reset_password_token", unique: true
