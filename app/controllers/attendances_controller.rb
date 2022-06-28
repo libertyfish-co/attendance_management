@@ -19,30 +19,30 @@ class AttendancesController < ApplicationController
     @dw = ["日", "月", "火", "水", "木", "金", "土"]
     @employee = current_employee
     
-    @attendances = @employee.attendances.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).includes(:attendance_details).references(:attendance_details).order(base_date: "ASC")
+    @attendances = @employee.attendances.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id).includes(:attendance_details).references(:attendance_details).order(base_date: "ASC")
     @attendance_array = @attendances.to_a
 
     # それぞれの合計時間を出す
     # 作業 休憩は稼働がないときは表に表示させないようにしているため、計算対象に入らないので稼働があるときのみ加算
-    @sum_work_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:operating_time) + Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).where.not(operating_time: nil).all.sum(:break_time) 
+    @sum_work_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id).all.sum(:operating_time) + Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id).where.not(operating_time: nil).all.sum(:break_time) 
 
     # 休憩 稼働がなければ表示しないため稼働があるときのみ加算
-    @sum_break_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).where.not(operating_time: nil).all.sum(:break_time)
+    @sum_break_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id).where.not(operating_time: nil).all.sum(:break_time)
 
     # 稼働
-    @sum_operating_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:operating_time)
+    @sum_operating_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id).all.sum(:operating_time)
 
     # 有給一般
-    @sum_paid_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:paid_time)
+    @sum_paid_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id).all.sum(:paid_time)
 
     # 有給特別
-    @sum_special_paid_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:special_paid_time)
+    @sum_special_paid_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id).all.sum(:special_paid_time)
 
     # 実働
-    @sum_actual_time = @sum_work_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:operating_time) + Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:paid_time) + Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:special_paid_time)
+    @sum_actual_time = @sum_work_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id).all.sum(:operating_time) + Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:paid_time) + Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:special_paid_time)
 
     # 控除
-    @sum_deduction_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month).all.sum(:deduction_time)
+    @sum_deduction_time = Attendance.where(base_date: @month_date.beginning_of_month..@month_date.end_of_month, employee_id: @employee.id.all.sum(:deduction_time)
 
 
     @corporation = Corporation.find(@employee.corporation.id)
