@@ -85,7 +85,7 @@
                             <% end %>
 
                             <% if attendance&.paid_time.present? || attendance&.operating_time.present? || attendance&.special_paid_time.present? %> <!-- 実働＝稼働＋有給（一般）＋有給（特別）。どれかの値がnillの可能性もあるので分岐 -->
-                                <td><%= sprintf("%10.2f", ((attendance.operating_time.to_i + attendance.paid_time.to_i + attendance.special_paid_time.to_i) / 60)) %></td> <!-- nilの場合０に換算して計算するようにしている。 -->
+                                <td><%= sprintf("%10.2f", ((attendance.operating_time + attendance.paid_time + attendance.special_paid_time) / 60)) %></td> <!-- nilの場合０に換算して計算するようにしている。 -->
                             <% else %>
                                 <td></td>
                             <% end %>
