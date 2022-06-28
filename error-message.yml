@@ -1,0 +1,39 @@
+normal:
+  month:
+    E002: E%{display_id}002 以下の営業日に勤怠データがありません。%{business_day}
+    E003: E%{display_id}003 登録された以下の日付の勤怠データに不整合があります。%{base_date}
+    E004: E%{display_id}004 確認が取れました。帳票出力してください。
+  attendance:
+    E019: E%{display_id}019 登録に成功しました。
+
+abnormal:
+  all:
+    E026: E%{display_id}026 DB接続に失敗しました。
+  login:
+    E001: E%{display_id}001 認証情報に誤りがあります。
+    E002: E%{display_id}002 ログオフしました。
+  month:
+    E005: E%{display_id}005 勤怠データ不整合。
+    E006: E%{display_id}006 勤怠データ無し。
+  attendance:
+    E007: E%{display_id}007 連続していない時間があります。区間が連続するように時刻を入力してください。
+    E008: E%{display_id}008 時間が重複しています。重複しないように時刻を入力してください。
+    E009: E%{display_id}009 開始時刻は終了時刻より前を入力してください。
+    E010: E%{display_id}010 時刻をすべて入力してください。
+    E011: E%{display_id}011 オーダーを入力してください。
+    E012: E%{display_id}012 作業を入力してください。
+    E013: E%{display_id}013 備考の入力文字数が上限(50文字)を超過しています。
+    E014: E%{display_id}014 半角数字で入力して下さい。
+    E015: E%{display_id}015 0～%{time_limit}の間で入力して下さい。
+    E016: E%{display_id}016 0~59の間で入力して下さい。
+    E018: E%{display_id}018 登録に失敗しました。管理者に連絡してください。
+  pattern:
+    E017: E%{display_id}017 パターン名を入力してください。
+  stamp:
+    E025: E%{display_id}025 ファイルサイズが最大値を超えています。
+  password:
+    E020: E%{display_id}020 値を入力してください。
+    E021: E%{display_id}021 正しいパスワードを入力してください。
+    E022: E%{display_id}022 半角英数字で入力してください。
+    E023: E%{display_id}023 6文字以上128文字以内で入力してください。
+    E024: E%{display_id}024 パスワードが一致していません。

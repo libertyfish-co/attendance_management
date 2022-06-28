@@ -1,0 +1,2 @@
+class SealsController < ApplicationController
+end
