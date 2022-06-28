@@ -12,6 +12,18 @@ class AttendancesController < ApplicationController
 
   # GET /attendances/1/YYYYMM or /attendances/1/YYYYMM.json
   def month
+    month = params['date'] || Time.zone.now
+
+    @month_date = (month + '01').to_date
+    @nav_prev = @month_date.prev_month.strftime("%Y%m")
+    @nav_next = @month_date.next_month.strftime("%Y%m")
+    @dw = ["日", "月", "火", "水", "木", "金", "土"]
+    @employee = Employee.first
+    @corporation = Corporation.find(@employee.corporation.id)
+    @attendances = @employee.attendances.select_at(month,:month).
+      join_table(:attendance_details).process_in_month
+    
+    @attendance_array = @attendances.to_a
   end
     
   def week
