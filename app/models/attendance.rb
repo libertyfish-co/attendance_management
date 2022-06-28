@@ -28,7 +28,7 @@ class Attendance < ApplicationRecord
   # 作業,休憩,稼働,有給(一般),有給(特別),実働,控除
   # を持ったオブジェクトを返す。
   # Selfから勤怠レコードｓの合計時間を集計する。
-  def self.aggregate_time_of
+  def self.aggregate_time
     result = {}
     # シンボル毎にresultに代入していく
     [:work_time,:break_time,:operating,:paid_time,
