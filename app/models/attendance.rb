@@ -51,7 +51,7 @@ class Attendance < ApplicationRecord
 
 
   # ************** private ******************
-  # Todo
+  # 2022/06/28 月勤怠フィルタは良好。（週勤怠未実装）
   # 引数：(string)month_attendance|week_attendance
   # 返り値：（フィルタされた）勤怠レコードｓ
 
@@ -65,7 +65,7 @@ class Attendance < ApplicationRecord
   def self.nessarry_colmun_of(page_name)
     {
       'month_attendance': [:start_time, :end_time, :break_time, :operating_time, 
-        :paid_time, :special_paid_time, :deducation_time, :work_content],
+        :paid_time, :special_paid_time, :deduction_time, :work_content],
       'week_attendance': []
     }[page_name]
   end
