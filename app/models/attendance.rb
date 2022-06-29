@@ -74,22 +74,7 @@ class Attendance < ApplicationRecord
     # ※filter_byメソッドを使うこと。
 
     result = []
-    attendances = self.all
-    day = 1
-    self.all.each do |j_attendance|
-      if j_attendance.base_date.day == day
-        result.push({ 
-          start_time:j_attendance.start_time,
-          end_time:j_attendance.end_time,
-          working_time:j_attendance.operating_time.to_i+j_attendance.break_time.to_i,
-          break_time:j_attendance.break_time.to_i,
-          operating_time:j_attendance.operating_time.to_i,
-          paid_time:j_attendance.paid_time.to_i,
-          special_paid_time:j_attendance.special_paid_time.to_i,
-          actual_time:j_attendance.operating_time.to_i+j_attendance.paid_time.to_i+j_attendance.special_paid_time.to_i,
-          remarks: j_attendance.attendance_details.join_work_contents
-        })
-      else
+    (self.first.base_date.beginning_of_month..self.first.base_date.end_of_month).each do |day|
         result.push({
           start_time:'',
           end_time:'',
@@ -99,10 +84,24 @@ class Attendance < ApplicationRecord
           paid_time:'',
           special_paid_time:'',
           actual_time:'',
+          deduction_time:'',
           remarks: ''
         })
-      end
-      day += 1
+    end
+    self.all.each do |j_attendance|
+      day = j_attendance.base_date.day
+      result[day-1] = { 
+        start_time:j_attendance.start_time,
+        end_time:j_attendance.end_time,
+        working_time:j_attendance.operating_time.to_i+j_attendance.break_time.to_i,
+        break_time:j_attendance.break_time.to_i,
+        operating_time:j_attendance.operating_time.to_i,
+        paid_time:j_attendance.paid_time.to_i,
+        special_paid_time:j_attendance.special_paid_time.to_i,
+        actual_time:j_attendance.operating_time.to_i+j_attendance.paid_time.to_i+j_attendance.special_paid_time.to_i,
+        deduction_time:j_attendance.deduction_time,
+        remarks: j_attendance.attendance_details.join_work_contents
+      }
     end
     result
   end
