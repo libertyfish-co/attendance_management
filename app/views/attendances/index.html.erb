@@ -1,6 +1,6 @@
-<%= link_to @month.prev_month.strftime("%Y/%m"), month_attendances_path('date': @nav_prev) %>
+<%= link_to @month.prev_month.strftime("%Y/%m"), attendances_path('date': @nav_prev) %>
 <%= @month.strftime("%Y/%m") %>
-<%= link_to @month.next_month.strftime("%Y/%m"), month_attendances_path('date': @nav_next) %>
+<%= link_to @month.next_month.strftime("%Y/%m"), attendances_path('date': @nav_next) %>
 
 <table>
     <thead>

@@ -25,16 +25,30 @@ class AttendancesController < ApplicationController
 
   # GET /attendances/new
   def new
-    @attendance = Attendance.new
+    @orders = Order.all
+    @works  = Work.all
+    if((ada = Employee.first.attendances.select_attendance_by_date(Time.now)).nil?)
+      @attendance = Employee.first.attendances.build
+      # @ada_details = AttendanceDetail.init_attendance_detail
+      # 10.times do |i|
+      #   @ada_details = @attendance.attendance_details.build(start_time:nil,end_time:nil,order_id:nil,work_id:nil,work_content:nil)
+      # end
+      @ada_details = @attendance.attendance_details.build(start_time:nil,end_time:nil,order_id:nil,work_id:nil,work_content:nil)
+    else
+      @attendance = ada
+      @ada_details = ada.attendance_details.build
+    end
   end
 
   # GET /attendances/1/edit
   def edit
+    @orders = Order.all
+    @works  = Work.all
   end
 
   # POST /attendances or /attendances.json
   def create
-    @attendance = Attendance.new(attendance_params)
+    @attendance = Attendance.new(create_attendance_params)
 
     respond_to do |format|
       if @attendance.save
@@ -49,8 +63,10 @@ class AttendancesController < ApplicationController
 
   # PATCH/PUT /attendances/1 or /attendances/1.json
   def update
+    @orders = Order.all
+    @works  = Work.all
     respond_to do |format|
-      if @attendance.update(attendance_params)
+      if @attendance.update!(create_attendance_params)
         format.html { redirect_to attendance_url(@attendance), notice: "Attendance was successfully updated." }
         format.json { render :show, status: :ok, location: @attendance }
       else
@@ -79,6 +95,10 @@ class AttendancesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def attendance_params
       params.require(:attendance).permit(:corporation_id, :employee_id, :start_time, :end_time, :rest_time, :work_content)
+    end
+
+    def create_attendance_params
+      params.require(:attendance).permit(:employee_id, :base_date, attendance_details_attributes: [:start_time, :end_time, :order_id, :work_id, :work_content])
     end
 
     def month_params
