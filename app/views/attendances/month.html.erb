@@ -1,206 +1,125 @@
-<%= link_to @month_date.prev_month.strftime("%Y/%m"), month_attendances_path('date': @nav_prev) %>
-<%= @month_date.strftime("%Y/%m") %>
-<%= link_to @month_date.next_month.strftime("%Y/%m"), month_attendances_path('date': @nav_next) %>
-
-<table>
-            <thead>
-                <tr>
-                    <th rowspan="2", colspan="1">日</th>
-                    <th rowspan="2", colspan="1">曜日</th>
-                    <th rowspan="2", colspan="3">時刻</th>
-                    <th rowspan="1", colspan="7">時間内訳</th>
-                    <th rowspan="2", colspan="1">摘要</th>
-                </tr>
-                <tr>
-                    <th rowspan="1", colspan="1">作業</th>
-                    <th rowspan="1", colspan="1">休憩</th>
-                    <th rowspan="1", colspan="1">稼働</th>
-                    <th rowspan="1", colspan="1">有給(一般)</th>
-                    <th rowspan="1", colspan="1">有給(特別)</th>
-                    <th rowspan="1", colspan="1">実働</th>
-                    <th rowspan="1", colspan="1">控除</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% (@month_date.beginning_of_month..@month_date.end_of_month).each do |month| %>
-                <% attendance = @attendance_array.shift() %>
-                <% if attendance.present? %>
-                    <% unless attendance.base_date == month %>
-                        <!-- 勤怠登録画面へのリンク（URLパラメータ付き)（未完成） -->
-                        <tr>
-                            <td><%= month.strftime("%d") %></td>
-                            <td><%= month.strftime("#{@dw[month.wday]}") %></td>
-                            <td></td>
-                            <td>～</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    <% else %>
-                        <!-- 勤怠登録画面へのリンク（URLパラメータ付き）（未完成）-->
-                        <tr>
-                            <td><%= month.strftime("%d") %></td>
-                            <td><%= month.strftime("#{@dw[month.wday]}") %></td>
-                            <td><%= attendance.start_time.strftime("%R") %></td>
-                            <td>～</td>
-                            <td><%= attendance.end_time.strftime("%R") %></td>
-
-                            <!-- 稼働時間がない場合は空白にする。作業＝稼働＋休憩だが、稼働がない場合は休憩があっても表示しない。 -->
-                            <% if attendance.break_time.present? && attendance.operating_time.present? %>
-                                <td><%= sprintf("%10.2f", ((attendance.operating_time + attendance.break_time) / 60)) %></td>
-                            <% elsif attendance.operating_time.present? && attendance.break_time.blank? %>
-                                <td><%= sprintf("%10.2f", (attendance.operating_time / 60)) %></td>
-                            <% else %>
-                                <td></td>
-                            <% end %>
-                            
-                            <!-- 休憩時間が存在しても稼働時間がなければ表示しない -->
-                            <% if attendance.break_time.present? && attendance.operating_time.present? %> 
-                                <td><%= sprintf("%10.2f", (attendance.break_time / 60)) %></td>
-                            <% else %>
-                                <td></td>
-                            <% end %>
-
-                            <% if attendance.operating_time.present? %>  
-                                <td><%= sprintf("%10.2f", (attendance.operating_time / 60)) %></td>
-                            <% else %>
-                                <td></td>
-                            <% end %>
-                            
-                            <% if attendance.paid_time.present? %>  
-                                <td><%= sprintf("%10.2f", (attendance.paid_time / 60)) %></td>
-                            <% else %>
-                                <td></td>
-                            <% end %>
-
-                            <% if attendance.special_paid_time.present? %>  
-                                <td><%= sprintf("%10.2f", (attendance.special_paid_time / 60)) %></td>
-                            <% else %>
-                                <td></td>
-                            <% end %>
-
-                            <% if attendance&.paid_time.present? || attendance&.operating_time.present? || attendance&.special_paid_time.present? %> <!-- 実働＝稼働＋有給（一般）＋有給（特別）。どれかの値がnillの可能性もあるので分岐 -->
-                                <td><%= sprintf("%10.2f", ((attendance.operating_time.to_i + attendance.paid_time.to_i + attendance.special_paid_time.to_i) / 60)) %></td> <!-- nilの場合０に換算して計算するようにしている。 -->
-                            <% else %>
-                                <td></td>
-                            <% end %>
-
-                            <% if attendance.deduction_time.present? %>  
-                                <td><%= sprintf("%10.2f", (attendance.deduction_time / 60)) %></td>
-                            <% else %>
-                                <td></td>
-                            <% end %>
-
-                            <!-- 勤怠に結び付いた勤怠詳細のオーダー名すべて表示。表示される際にカッコがついてしまっているので外してほしいです。 -->
-                            <td><%= attendance.attendance_details.map {|detail| detail.order.name } %></td>
-                        </tr>
-                    <% end %>
-                <% else %>
-                    <!-- 勤怠登録画面へのリンク（URLパラメータ付き）（未完成）-->
-                    <tr>
-                            <td><%= month.strftime("%d") %></td>
-                            <td><%= month.strftime("#{@dw[month.wday]}") %></td>
-                            <td></td>
-                            <td>～</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    <% end %>
-                <% end %>
-                <tr></tr>
-                <tr>
-                    <td colspan = "5">合計</td>
-
-                    <% if @sum_work_time != 0 %>
-                        <td><%= sprintf("%10.2f", (@sum_work_time / 60)) %></td>
-                    <% else %>
-                        <td></td>
-                    <% end %>
-
-                    <% if @sum_break_time != 0 %>
-                        <td><%= sprintf("%10.2f", (@sum_break_time / 60)) %></td>
-                    <% else %>
-                        <td></td>
-                    <% end %>
-
-                    <% if @sum_operating_time != 0 %>
-                        <td><%= sprintf("%10.2f", (@sum_operating_time / 60)) %></td>
-                    <% else %>
-                        <td></td>
-                    <% end %>
-
-                    <% if @sum_paid_time != 0 %>
-                        <td><%= sprintf("%10.2f", (@sum_paid_time / 60)) %></td>
-                    <% else %>
-                        <td></td>
-                    <% end %>
-
-                    <% if @sum_special_paid_time != 0 %>
-                        <td><%= sprintf("%10.2f", (@sum_special_paid_time / 60)) %></td>
-                    <% else %>
-                        <td></td>
-                    <% end %>
-
-                    <% if @sum_actual_time != 0 %>
-                        <td><%= sprintf("%10.2f", (@sum_actual_time / 60)) %></td>
-                    <% else %>
-                        <td></td>
-                    <% end %>
-
-                    <% if @sum_deduction_time != 0 %>
-                        <td><%= sprintf("%10.2f", (@sum_deduction_time / 60)) %></td>
-                    <% else %>
-                        <td></td>
-                    <% end %>
-                </tr>
-            </tbody>
-        </table>
-        <button type="button">チェック</button>
-        <button type="button">帳簿出力</button>
-        <button type="button">オーダー別</button>
-    <style>
-	td, th {
-            padding: 5px 10px;
-        }
- 
-        thead th {
-            background: #110303;
-            color: #fff;
-        }
- 
-        tbody tr {
-            border-bottom: 1px dotted #D8D5D5;
-        }
- 
-        tbody td {
-            border: 1px dotted #D8D5D5;
-            border-width: 0px 1px;
-            -webkit-transition: background-color .1s linear;
-            -moz-transition: background-color .1s linear;
-            transition: background-color .1s linear;
-        }
- 
-        tbody tr:first-child {
-            border-top: none;
-        }
- 
-        tbody tr.even td {
-            background: #fbfbfb;
-        }
- 
-        tbody tr.clickable:hover td {
-            background: #ecf2fa;
-            cursor: pointer;
-        }
+<%# javascript_pack_tag 'attendances/index'%>
+<%# javascript_pack_tag 'attendances/index'%>
+<style>
+.transition{
+    font-size: 28px;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: none;
+}
+.bi{
+    color: #0060b2;
+}
+table{
+    font-size: 14px;
+}
+thead {
+    background-color: #0060b2;
+    color: #fff;
+}
+table tr th.pb{
+    padding-bottom: 21px;
+}
+table tr th.pb2{
+    padding-bottom: 10px;
+}
+table, td, th {
+    border: 2px #3d3f9e solid;
+}
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px #3d3f9e solid;
+}
+.border-bottom {
+    border-bottom: 2px #3d3f9e solid !important;
+}
+.border-top{
+    border-top: none;
+}
+.today{
+    background-color: #ffc107;
+}
+.sat {
+    color: #0000ff;
+    background-color: #9dd7fb;
+}
+.sun{
+    color: #FF0000;
+    background-color: #9dd7fb;
+}
 </style>
+
+<!-- 先月・翌月遷移 -->
+<div class="ml-4 transition">
+    <%= link_to month_attendances_path('date': @nav_prev) do %>
+        <i class="bi bi-arrow-left-circle"></i>
+    <% end %>
+    <%= @month_date.strftime("%Y/%m") %>
+    <%= link_to month_attendances_path('date': @nav_next) do %>
+        <i class="bi bi-arrow-right-circle"></i>
+    <% end %>
+</div>
+
+<div class="mx-4">
+    <table class="table table-hover table-sm text-center">
+        <thead>
+            <tr>
+                <th rowspan="2" width="2%" class="pb">日</th>
+                <th rowspan="2" width="2%" class="pb2">曜日</th>
+                <th rowspan="2", colspan="3" width="12%" class="pb">時刻</th>
+                <th colspan="7" width="42%" class="border-bottom">時間内訳</th>
+                <th rowspan="2" width="42%" class="pb">摘要</th>
+            </tr>
+            <tr>
+                <th class="border-top">作業</th>
+                <th class="border-top">休憩</th>
+                <th class="border-top">稼働</th>
+                <th class="border-top">有給(一般)</th>
+                <th class="border-top">有給(特別)</th>
+                <th class="border-top">実働</th>
+                <th class="border-top">控除</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% (@month_date.beginning_of_month..@month_date.end_of_month).each do |month| %>
+                <tr class="<%= "today" if month.today? %>">
+                    <td width="2%" class="holiday <%= "sat" if month.saturday? %> <%= "sun" if month.sunday? %>">
+                        <%= month.strftime("%d") %>
+                    </td>
+                    <td width="2%" class="<%= "sat" if month.saturday? %> <%= "sun" if month.sunday? %>">
+                        <%= month.strftime("#{@dw[month.wday]}") %>
+                    </td>
+                    <td width="5%"></td>
+                    <td width="2%">～</td>
+                    <td width="5%"></td>
+                    <td width="7%"></td>
+                    <td width="7%"></td>
+                    <td width="7%"></td>
+                    <td width="7%"></td>
+                    <td width="7%"></td>
+                    <td width="7%"></td>
+                    <td width="7%"></td>
+                    <td width="42%"></td>
+                </tr>
+            <% end %>
+            <!-- 勤怠時間の集計表示 -->
+            <tr>
+                <td colspan="5">合計</td>
+                <td colspan="1"><%= sprintf("%10.2f", (@sum_work_time / 60)) %></td>
+                <td colspan="1"><%= sprintf("%10.2f", (@sum_break_time / 60)) %></td>
+                <td colspan="1"><%= sprintf("%10.2f", (@sum_operating_time / 60)) %></td>
+                <td colspan="1"><%= sprintf("%10.2f", (@sum_paid_time / 60)) %></td>
+                <td colspan="1"><%= sprintf("%10.2f", (@sum_special_paid_time / 60)) %></td>
+                <td colspan="1"><%= sprintf("%10.2f", (@sum_actual_time / 60)) %></td>
+                <td colspan="1"><%= sprintf("%10.2f", (@sum_deduction_time / 60)) %></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<button type="button">チェック</button>
+<button type="button">帳簿出力</button>
+<button type="button">オーダー別</button>
