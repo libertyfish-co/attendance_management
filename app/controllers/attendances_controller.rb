@@ -14,6 +14,7 @@ class AttendancesController < ApplicationController
       order(base_date: "ASC").process_in_month
 
     @sum = @emp.attendances.select_at(@month,:month).aggregate_time
+    binding.pry
   end
 
   # GET /attendances/1 or /attendances/1.json

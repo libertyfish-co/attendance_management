@@ -108,17 +108,17 @@
                     <td width="2%" class="<%= "sat" if month.saturday? %> <%= "sun" if month.sunday? %>">
                         <%= format_to(month,:wday) %>
                     </td>
-                    <td width="5%"></td>
+                    <td width="5%"><%= @attendances[month.day-1][:start_time]%></td>
                     <td width="2%">～</td>
-                    <td width="5%"></td>
-                    <td width="7%"></td>
-                    <td width="7%"></td>
-                    <td width="7%"></td>
-                    <td width="7%"></td>
-                    <td width="7%"></td>
-                    <td width="7%"></td>
-                    <td width="7%"></td>
-                    <td width="42%"></td>
+                    <td width="5%"><%=%></td>
+                    <td width="7%"><%=%></td>
+                    <td width="7%"><%=%></td>
+                    <td width="7%"><%=%></td>
+                    <td width="7%"><%=%></td>
+                    <td width="7%"><%=%></td>
+                    <td width="7%"><%=%></td>
+                    <td width="7%"><%=%></td>
+                    <td width="42%"><%=%></td>
                 </tr>
             <% end %>
             <!-- 勤怠時間の集計表示 -->
