@@ -15,7 +15,7 @@ module ApplicationHelper
       ymd_wday:dt.try(:strftime,"%Y/%m/%d")+" #{wday_to_ja(dt.wday)}",
       ymw:dt.try(:strftime,"%Y/%m")+" ",# Todo 週
       wday:"#{wday_to_ja(dt.wday)}",
-      day:dt.try(:strftime,"%d"),
+      day:dt.try(:strftime,"%-d"),
       am_pm:dt.try(:strftime,"%R")
     }[format]
   end

@@ -81,14 +81,13 @@ class Attendance < ApplicationRecord
         result.push({ 
           start_time:j_attendance.start_time,
           end_time:j_attendance.end_time,
-          working_time:j_attendance.operating_time+
-            (j_attendance.operating_time.nil? ? 0:j_attendance.rest_time),
-          rest_time:j_attendance.rest_time,
-          operating_time:j_attendance.operating_time,
-          paid_time:j_attendance.paid_time,
-          special_paid_time:j_attendance.special_paid_time,
-          actual_time:j_attendance.operating_time+j_attendance.paid_time+j_attendance.special_paid_time,
-          remarks: self.join_work_contents
+          working_time:j_attendance.operating_time.to_i+j_attendance.break_time.to_i,
+          break_time:j_attendance.break_time.to_i,
+          operating_time:j_attendance.operating_time.to_i,
+          paid_time:j_attendance.paid_time.to_i,
+          special_paid_time:j_attendance.special_paid_time.to_i,
+          actual_time:j_attendance.operating_time.to_i+j_attendance.paid_time.to_i+j_attendance.special_paid_time.to_i,
+          remarks: j_attendance.attendance_details.join_work_contents
         })
       else
         result.push({

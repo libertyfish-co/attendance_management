@@ -25,14 +25,19 @@ class AttendancesController < ApplicationController
 
   # GET /attendances/new
   def new
+    @current = params['date'].blank? ? 
+      Time.current : Time.parse(params['date'])
     @orders = Order.all
     @works  = Work.all
-    if((ada = @emp.attendances.select_attendance_by_date(Time.current)).nil?)
+
+    if((ada = @emp.attendances.select_attendance_by_date(@current)).nil?)
       @attendance = @emp.attendances.build
       @ada_details = @attendance.attendance_details.init_attendance_detail(@attendance.id)
+
     else
       @attendance = ada
       @ada_details = ada.attendance_details.init_attendance_detail(@attendance.id)
+
     end
   end
 
@@ -44,7 +49,7 @@ class AttendancesController < ApplicationController
 
   # POST /attendances or /attendances.json
   def create
-    @attendance = Attendance.new(create_attendance_params)
+    @attendance = Attendance.new(filter_with_filled_form)
 
     respond_to do |format|
       if @attendance.save

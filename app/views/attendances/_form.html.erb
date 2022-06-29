@@ -1,6 +1,6 @@
 <%= form_for(@attendance) do |ada| %>
   <%= ada.hidden_field :employee_id, value: @attendance.employee_id %>
-  <%= ada.hidden_field :base_date, value: Time.now %>
+  <%= ada.hidden_field :base_date, value: @current %>
   <% if attendance.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(attendance.errors.count, "error") %> prohibited this attendance from being saved:</h2>
