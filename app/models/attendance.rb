@@ -21,7 +21,7 @@ class Attendance < ApplicationRecord
 
   # テーブル結合
   def self.join_table(table_names)
-    self.includes(:table_names).references(:table_names)
+    self.includes(table_names).references(table_names)
   end
   
   # 月間勤怠レコード
@@ -55,11 +55,11 @@ class Attendance < ApplicationRecord
     return result
   end
 
-  # Todo
   # 引数: なし
   # 返り値：オブジェクト配列
   # 例）オブジェクト配列
   # [{start_time,end_time,work_time,beak_time...},{start_time,end_time...}]
+
   # ～に勤怠データを加工する。
   # 月勤怠画面用のデータを加工する。
   # ※勤怠がない日にちも空文字入れて必ず、１～月末までデータをモデル側で作っておく。
@@ -73,7 +73,39 @@ class Attendance < ApplicationRecord
     # 何もない日は、空文字（''）を入れる
     # ※filter_byメソッドを使うこと。
 
-
+    result = []
+    attendances = self.all
+    day = 1
+    self.all.each do |j_attendance|
+      if j_attendance.base_date.day == day
+        result.push({ 
+          start_time:j_attendance.start_time,
+          end_time:j_attendance.end_time,
+          working_time:j_attendance.operating_time+
+            (j_attendance.operating_time.nil? ? 0:j_attendance.rest_time),
+          rest_time:j_attendance.rest_time,
+          operating_time:j_attendance.operating_time,
+          paid_time:j_attendance.paid_time,
+          special_paid_time:j_attendance.special_paid_time,
+          actual_time:j_attendance.operating_time+j_attendance.paid_time+j_attendance.special_paid_time,
+          remarks: self.join_work_contents
+        })
+      else
+        result.push({
+          start_time:'',
+          end_time:'',
+          working_time:"",
+          rest_time:"",
+          operating_time:'',
+          paid_time:'',
+          special_paid_time:'',
+          actual_time:'',
+          remarks: ''
+        })
+      end
+      day += 1
+    end
+    result
   end
 
   # Todo（7/1以降着手）

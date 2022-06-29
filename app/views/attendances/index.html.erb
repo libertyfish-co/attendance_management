@@ -22,10 +22,10 @@
         </tr>
     </thead>
     <tbody>
-        <% (@month.beginning_of_month..@month.end_of_month).each do |month| %>
+        <% (@month.beginning_of_month.to_datetime..@month.end_of_month.to_datetime).each do |month| %>
         <tr>
-            <td><%= month.strftime("%d") %></td>
-            <td><%= month.strftime("#{@dw[month.wday]}") %></td>
+            <td><%= format_to(month,:day) %></td>
+            <td><%= format_to(month,:wday) %></td>
             <td></td>
             <td>～</td>
             <td></td>

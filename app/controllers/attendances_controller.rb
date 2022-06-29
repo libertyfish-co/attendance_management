@@ -4,7 +4,7 @@ class AttendancesController < ApplicationController
   # GET /attendances or /attendances.json
   def index
     @month = params['date'].blank? ? 
-      Time.zone.now : Time.parse(params['date'])
+      Time.current : Time.parse(params['date'])
 
     @nav_prev = @month.prev_month.strftime("%Y%m")
 
@@ -61,13 +61,13 @@ class AttendancesController < ApplicationController
   def update
     @orders = Order.all
     @works  = Work.all
-    binding.pry
+
     respond_to do |format|
       if @attendance.update!(filter_with_filled_form)
         format.html { redirect_to attendance_url(@attendance), notice: "Attendance was successfully updated." }
-        format.json { render :show, status: :ok, location: @attendance }
+        format.json { render :new, status: :ok, location: @attendance }
       else
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @attendance.errors, status: :unprocessable_entity }
       end
     end
