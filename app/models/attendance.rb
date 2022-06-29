@@ -1,8 +1,15 @@
 class Attendance < ApplicationRecord
   belongs_to :employee
-  has_many :attendance_details
 
+  has_many :attendance_details, :dependent => :destroy
+  accepts_nested_attributes_for :attendance_details
 
+  def self.select_attendance_by_date(date)
+    ada = self.where(base_date: (date.beginning_of_day)..(date.end_of_day)).all
+    # 複数件ヒットした場合、データ不整合につき、nilを返す。
+    return ada.length == 1? ada.first : nil
+  end
+  
   # 基準日から勤怠を検索する。
   def self.select_at(dt,format)
     {

@@ -27,12 +27,8 @@ class AttendancesController < ApplicationController
   def new
     @orders = Order.all
     @works  = Work.all
-    if((ada = Employee.first.attendances.select_attendance_by_date(Time.now)).nil?)
+    if((ada = Employee.first.attendances.select_attendance_by_date(Time.current)).nil?)
       @attendance = Employee.first.attendances.build
-      # @ada_details = AttendanceDetail.init_attendance_detail
-      # 10.times do |i|
-      #   @ada_details = @attendance.attendance_details.build(start_time:nil,end_time:nil,order_id:nil,work_id:nil,work_content:nil)
-      # end
       @ada_details = @attendance.attendance_details.build(start_time:nil,end_time:nil,order_id:nil,work_id:nil,work_content:nil)
     else
       @attendance = ada
