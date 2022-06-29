@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_20_040614) do
+ActiveRecord::Schema.define(version: 2022_06_28_052809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(version: 2022_06_20_040614) do
     t.boolean "consistency_flg"
     t.boolean "approval_flg"
     t.boolean "lock_flg"
+    t.index ["employee_id", "base_date"], name: "index_attendances_on_employee_id_and_base_date", unique: true
     t.index ["employee_id"], name: "index_attendances_on_employee_id"
   end
 
