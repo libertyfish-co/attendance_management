@@ -9,8 +9,13 @@ require("@rails/activestorage").start()
 require("channels")
 // jquery使用のため追記
 require('jquery')
-require('month.js')
+//require('month.js')
 
+// import "src/js/application.js";
+// import "src/css/application.css";
+
+require('src/js/attendances/index.js')
+require('src/css/attendances/index.css')
 
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
