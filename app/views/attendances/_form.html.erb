@@ -1,6 +1,48 @@
+<style>
+thead {
+  background-color: #0060b2;
+  color: #fff;
+}
+table tr th.pb{
+  padding-bottom: 21px;
+}
+table tr th.pb2{
+  padding-bottom: 10px;
+}
+table, td, th {
+  border: 2px #3d3f9e solid;
+}
+.table thead th {
+  vertical-align: bottom;
+  border-bottom: 2px #3d3f9e solid;
+}
+.border-bottom {
+  border-bottom: 2px #3d3f9e solid !important;
+}
+.border-top{
+  border-top: none;
+}
+.bg-blue{
+  background-color: #c2c4c7;
+}
+.submit-btn {
+  margin-left: 94%;
+  display       : inline-block;
+  border-radius : 5%;
+  border: none;
+  font-size     : 18pt;
+  text-align    : center;
+  cursor        : pointer;
+  padding       : 12px 13px;
+  background    : #0060b2;
+  color         : #ffffff;
+  line-height   : 1em;
+}
+</style>
+
 <%= form_for(@attendance) do |ada| %>
   <%= ada.hidden_field :employee_id, value: @attendance.employee_id %>
-  <%= ada.hidden_field :base_date, value: @current %>
+  <%= ada.hidden_field :base_date, value: Time.now %>
   <% if attendance.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(attendance.errors.count, "error") %> prohibited this attendance from being saved:</h2>
@@ -13,65 +55,75 @@
     </div>
   <% end %>
 
-<div>
-    <table>
+  <div class="mx-4">
+    <table class="table table-hover table-sm text-center">
       <thead>
-          <tr>
-            <th> id</th>
-            <th>時刻</th>
-            <th scope="col">オーダーCD</th>
-            <th scope="col">作業CD</th>
-            <th scope="col">作業内訳</th>
-            <th>備考</th>
-          </tr>
+        <tr>
+          <th rowspan="2" width="2%" class="pb"> id</th>
+          <th rowspan="2" colspan="3" width="16%" class="pb">時刻</th>
+          <th rowspan="2" scope="col" width="20%" class="pb">オーダーCD</th>
+          <th rowspan="2" scope="col" width="18%" class="pb">作業CD</th>
+          <th colspan="4" width="24%" class="border-bottom">作業内訳</th>
+          <th rowspan="2" width="20%" class="pb">備考</th>
+        </tr>
+        <tr>
+          <th class="border-top">稼働</th>
+          <th class="border-top">休憩</th>
+          <th class="border-top">有給</th>
+          <th class="border-top">控除</th>
+        </tr>
       </thead>
+
       <tbody>
-          <% i = 0 %>
-          <%= ada.fields_for :attendance_details do |f|%>
-                <tr>
-                  <td>
-                      <%= i+1 %>
-                  </td>
-                  <td>
-                      <%= f.time_field :start_time %>
-                      -
-                      <%= f.time_field :end_time %>
-                  </td>
-                  <td>
-                      <%= f.collection_select :order_id, @orders, :id, :name, { include_blank: '選択してください'}, { class: 'form-control', id_data: i}%>
-                  </td>
-                  <td>
-                      <%= f.collection_select :work_id, @works, :id, :name, { include_blank: '選択してください'}, { class: 'form-control', id_data: i}%>
-                  </td>
-                  <td>
-                      <table class="table attendance__new__detail-table" table-id="<%= i.to_s%>">
-                        <thead>
-                          <tr>
-                            <th scope="col">稼働</th>
-                            <th scope="col">休憩</th>
-                            <th scope="col">有給</th>
-                            <th scope="col">控除</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <th class="working">0</th>
-                            <td class="rest">0</td>
-                            <td class="paid_holiday">0</td>
-                            <td class="deduction">0</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                  </td>
-                  <td><%= f.text_area :work_content, col:15, row: 10 %></td>
-                </tr>
-                <% i = i+1 %>
-                <% end %>
+        <% i = 0 %>
+        <%= ada.fields_for :attendance_details do |f|%>
+          <tr>
+            <td>
+              <%= i+1 %>
+            </td>
+            <td>
+              <%= f.time_field :start_time%>
+            </td>
+            <td>
+              -
+            </td>
+            <td>
+              <%= f.time_field :end_time %>
+            </td>
+            <td>
+              <%= f.collection_select :order_id, @orders, :id, :name, { include_blank: '選択してください'}, { class: 'form-control', id_data: i}%>
+            </td>
+            <td>
+              <%= f.collection_select :work_id, @works, :id, :name, { include_blank: '選択してください'}, { class: 'form-control', id_data: i}%>
+            </td>
+            <td class="working bg-blue">0</td>
+            <td class="rest bg-blue">0</td>
+            <td class="paid_holiday bg-blue">0</td>
+            <td class="deduction bg-blue">0</td>
+            <td>
+              <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"></textarea>
+            </td>
+          </tr>
+          <% i = i+1 %>
+        <% end %>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td colspan="2"></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
       </tbody>
     </table>
-    <%= ada.submit value: "登録"%>
-</div>
+    <%= ada.submit value: "登録",class:'submit-btn'%>
+  </div>
 <% end %>
+
 <script>
     function changeThText(id,key,val) {
       console.log(id,key,val);
