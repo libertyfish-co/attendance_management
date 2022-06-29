@@ -1,23 +1,6 @@
-<style>
-  .attendance__new__header{
-    text-align: center;
-    background-color: rgba(56, 96, 178, 1);
-    color: white;
-    padding: 6px;
-    width: 90%;
-    margin: 0 auto;
-  }
-  .attendance__new__tables{
-    
-  }
-  table.table.attendance__new__table{
-    width: 60%;
-  }
-  table.table.attendance__new__detail-table{
-    width: 100px;
-  }
-</style>
-<%= form_with(model: attendance, local: true) do |form| %>
+<%= form_for(@attendance) do |ada| %>
+  <%= ada.hidden_field :employee_id, value: @attendance.employee_id %>
+  <%= ada.hidden_field :base_date, value: Time.now %>
   <% if attendance.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(attendance.errors.count, "error") %> prohibited this attendance from being saved:</h2>
@@ -29,78 +12,113 @@
       </ul>
     </div>
   <% end %>
-  <div class="attendance__new__header">時刻</div>
-<div class="container">
-  <div class="row">
-    <div class="col-sm">
-      <%= form.label :start_time %>
-      <%= form.datetime_select :start_time %>
-    </div>
-    <div class="col-sm">
-      <%= form.label :end_time %>
-      <%= form.datetime_select :end_time %>
-    </div>
-    <div class="col-sm">
-      <%= form.label :rest_time %>
-      <%= form.datetime_select :rest_time %>
-    </div>
-    <div class="col-sm">
-      <%= form.label :work_content %>
-      <%= form.text_field :work_content %>
-    </div>
-  </div>
-</div>
 
 <div>
-    <table class="table attendance__new__table">
+    <table>
       <thead>
-        <tr>
-          <th scope="col">オーダーCD</th>
-          <th scope="col">作業CD</th>
-          <th scope="col">作業時間</th>
-        </tr>
+          <tr>
+            <th> id</th>
+            <th>時刻</th>
+            <th scope="col">オーダーCD</th>
+            <th scope="col">作業CD</th>
+            <th scope="col">作業内訳</th>
+            <th>備考</th>
+          </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>
-              <select class="custom-select" id="inputGroupSelect01">
-                <option selected>Choose...</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </select>
-          </td>
-          <td>
-              <select class="custom-select" id="inputGroupSelect01">
-                <option selected>Choose...</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </select>
-          </td>
-          <td><%= form.text_field :work_content %></td>
-        </tr>
+          <% i = 0 %>
+          <%= ada.fields_for :attendance_details do |f|%>
+                <tr>
+                  <td>
+                      <%= i+1 %>
+                  </td>
+                  <td>
+                      <%= f.time_field :start_time %>
+                      -
+                      <%= f.time_field :end_time %>
+                  </td>
+                  <td>
+                      <%= f.collection_select :order_id, @orders, :id, :name, { include_blank: '選択してください'}, { class: 'form-control', id_data: i}%>
+                  </td>
+                  <td>
+                      <%= f.collection_select :work_id, @works, :id, :name, { include_blank: '選択してください'}, { class: 'form-control', id_data: i}%>
+                  </td>
+                  <td>
+                      <table class="table attendance__new__detail-table" table-id="<%= i.to_s%>">
+                        <thead>
+                          <tr>
+                            <th scope="col">稼働</th>
+                            <th scope="col">休憩</th>
+                            <th scope="col">有給</th>
+                            <th scope="col">控除</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th class="working">0</th>
+                            <td class="rest">0</td>
+                            <td class="paid_holiday">0</td>
+                            <td class="deduction">0</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                  </td>
+                  <td><%= f.text_area :work_content, col:15, row: 10 %></td>
+                </tr>
+                <% i = i+1 %>
+                <% end %>
       </tbody>
     </table>
-
-    <table class="table attendance__new__detail-table">
-      <thead>
-        <tr>
-          <th scope="col">稼働</th>
-          <th scope="col">休憩</th>
-          <th scope="col">有給</th>
-          <th scope="col">控除</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>8</th>
-          <td>1</td>
-          <td>0</td>
-          <td>0</td>
-        </tr>
-      </tbody>
-    </table>
+    <%= ada.submit value: "登録"%>
 </div>
-
 <% end %>
+<script>
+    function changeThText(id,key,val) {
+      console.log(id,key,val);
+      console.log(document.querySelectorAll(`[table-id]`)[id].getElementsByClassName(key)[0]);
+        document.querySelectorAll(`[table-id]`)[id].getElementsByClassName(key)[0].innerHTML = val;
+    }
+    function textToDate(hours,minites) {
+      var result = new Date();
+      result.setHours(Number(hours));
+      result.setMinutes(Number(minites));
+      result.setSeconds(0);
+      return result;
+    }
+    function selectChange(event){
+      const current_id = event.target.getAttribute('id_data');
+      const val = event.target.value;
+      const row = []
+      for(var i=0; i < 10; i++){
+        row.push({working:0,rest:0,paid_holiday:0,deduction:0})
+      }
+      var start_t = textToDate(
+        document.getElementById('attendance_attendance_details_attributes_0_start_time_4i').value,
+        document.getElementById('attendance_attendance_details_attributes_0_start_time_5i').value
+      );
+      var end_t = textToDate(
+        document.getElementById('attendance_attendance_details_attributes_0_end_time_4i').value,
+        document.getElementById('attendance_attendance_details_attributes_0_end_time_5i').value
+      );    
+      //休憩
+      if(val == 1){
+        changeThText(current_id,'rest',`${(end_t - start_t)/(1000*60*60)}`);
+        changeThText(current_id,'working',`0`);
+        changeThText(current_id,'paid_holiday',`0`);
+      }
+      //休み
+      if(val == 2){
+        changeThText(current_id,'paid_holiday',`${(end_t - start_t)/(1000*60*60)}`);
+        changeThText(current_id,'working',`0`);
+        changeThText(current_id,'rest',`0`);
+      }
+      if(val != 1 && val != 2){
+        changeThText(current_id,'working',`${(end_t - start_t)/(1000*60*60)}`);
+        changeThText(current_id,'rest',`0`);
+        changeThText(current_id,'paid_holiday',`0`);
+      }
+    }
+
+    var ele = document.getElementById('attendance_attendance_details_attributes_0_work_id');
+    ele.addEventListener('change', selectChange);
+</script>

@@ -3,10 +3,15 @@ class AttendanceDetail < ApplicationRecord
   belongs_to :order
   belongs_to :work
 
-  def self.init_attendance_detail
+  def self.init_attendance_detail(attendance_id)
     result = []
-    10.times do |i|
-      result.push(self.new(start_time:nil,end_time:nil,order_id:nil,work_id:nil,work_content:nil))
+    p self.class
+    self.all.each do |attendance_detail|
+      result.push(attendance_detail)
+    end
+
+    (10-self.all.length).times do |i|
+      result.push(self.all.build(attendance_id: attendance_id))
     end
     return result
   end

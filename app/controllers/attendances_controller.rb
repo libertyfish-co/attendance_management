@@ -27,12 +27,12 @@ class AttendancesController < ApplicationController
   def new
     @orders = Order.all
     @works  = Work.all
-    if((ada = Employee.first.attendances.select_attendance_by_date(Time.current)).nil?)
-      @attendance = Employee.first.attendances.build
-      @ada_details = @attendance.attendance_details.build(start_time:nil,end_time:nil,order_id:nil,work_id:nil,work_content:nil)
+    if((ada = @emp.attendances.select_attendance_by_date(Time.current)).nil?)
+      @attendance = @emp.attendances.build
+      @ada_details = @attendance.attendance_details.init_attendance_detail(@attendance.id)
     else
       @attendance = ada
-      @ada_details = ada.attendance_details.build
+      @ada_details = ada.attendance_details.init_attendance_detail(@attendance.id)
     end
   end
 
@@ -61,8 +61,9 @@ class AttendancesController < ApplicationController
   def update
     @orders = Order.all
     @works  = Work.all
+    binding.pry
     respond_to do |format|
-      if @attendance.update!(create_attendance_params)
+      if @attendance.update!(filter_with_filled_form)
         format.html { redirect_to attendance_url(@attendance), notice: "Attendance was successfully updated." }
         format.json { render :show, status: :ok, location: @attendance }
       else
@@ -97,6 +98,11 @@ class AttendancesController < ApplicationController
       params.require(:attendance).permit(:employee_id, :base_date, attendance_details_attributes: [:start_time, :end_time, :order_id, :work_id, :work_content])
     end
 
+    def filter_with_filled_form
+      result = create_attendance_params
+      result[:attendance_details_attributes] = result[:attendance_details_attributes].select{|k,v|!v[:start_time].blank?&&!v[:end_time].blank?}
+      result
+    end
     def month_params
       
     end
