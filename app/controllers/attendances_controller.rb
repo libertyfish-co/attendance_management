@@ -70,6 +70,7 @@ class AttendancesController < ApplicationController
 
     respond_to do |format|
       if @attendance.update!(filter_with_filled_form)
+        Attendance.calc_times_and_consistency_flg_and_save(@attendance.attendance_details)
         format.html { redirect_to attendance_url(@attendance), notice: "Attendance was successfully updated." }
         format.json { render :new, status: :ok, location: @attendance }
       else
@@ -100,7 +101,7 @@ class AttendancesController < ApplicationController
     end
 
     def create_attendance_params
-      params.require(:attendance).permit(:employee_id, :base_date, attendance_details_attributes: [:start_time, :end_time, :order_id, :work_id, :work_content])
+      params.require(:attendance).permit(:employee_id, :base_date, attendance_details_attributes: [:id, :start_time, :end_time, :order_id, :work_id, :work_content])
     end
 
     def filter_with_filled_form
