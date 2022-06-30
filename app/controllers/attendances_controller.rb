@@ -6,12 +6,12 @@ class AttendancesController < ApplicationController
     @month = params['date'].blank? ? 
       Time.current : Time.parse(params['date'])
 
-    @nav_prev = @month.prev_month.strftime("%Y%m")
+    @nav_prev = @month.prev_month.strftime("%Y/%m")
 
-    @nav_next = @month.next_month.strftime("%Y%m")
+    @nav_next = @month.next_month.strftime("%Y/%m")
 
     @attendances = @emp.attendances.monthly_attendance_record(@month,:month,:attendance_details).
-      order(base_date: "ASC").process_in_month
+      order(base_date: "ASC").process_in_month(@month)
 
     @sum = @emp.attendances.select_at(@month,:month).aggregate_time
   end
@@ -29,7 +29,6 @@ class AttendancesController < ApplicationController
       Time.current : Time.parse(params['date'])
     @orders = Order.all
     @works  = Work.all
-
     if((ada = @emp.attendances.select_attendance_by_date(@current)).nil?)
       @attendance = @emp.attendances.build
       @ada_details = @attendance.attendance_details.init_attendance_detail(@attendance.id)
@@ -49,8 +48,8 @@ class AttendancesController < ApplicationController
 
   # POST /attendances or /attendances.json
   def create
-    @attendance = Attendance.new(filter_with_filled_form)
 
+    @attendance = Attendance.new(filter_with_filled_form)
     respond_to do |format|
       if @attendance.save
         Attendance.calc_times_and_consistency_flg_and_save(@attendance.attendance_details)
@@ -67,7 +66,6 @@ class AttendancesController < ApplicationController
   def update
     @orders = Order.all
     @works  = Work.all
-
     respond_to do |format|
       if @attendance.update!(filter_with_filled_form)
         Attendance.calc_times_and_consistency_flg_and_save(@attendance.attendance_details)
@@ -101,7 +99,7 @@ class AttendancesController < ApplicationController
     end
 
     def create_attendance_params
-      params.require(:attendance).permit(:employee_id, :base_date, attendance_details_attributes: [:id, :start_time, :end_time, :order_id, :work_id, :work_content])
+      params.require(:attendance).permit(:id, :employee_id, :base_date, attendance_details_attributes: [:id, :start_time, :end_time, :order_id, :work_id, :work_content])
     end
 
     def filter_with_filled_form

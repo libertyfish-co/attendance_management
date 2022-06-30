@@ -55,7 +55,7 @@ class Attendance < ApplicationRecord
     return result
   end
 
-  # 引数: なし
+  # 引数: 日付
   # 返り値：オブジェクト配列
   # 例）オブジェクト配列
   # [{start_time,end_time,work_time,beak_time...},{start_time,end_time...}]
@@ -63,7 +63,7 @@ class Attendance < ApplicationRecord
   # ～に勤怠データを加工する。
   # 月勤怠画面用のデータを加工する。
   # ※勤怠がない日にちも空文字入れて必ず、１～月末までデータをモデル側で作っておく。
-  def self.process_in_month
+  def self.process_in_month(current)
     # 1. 必要なデータ:開始時間、終了時間、作業,休憩,稼働,有給(一般),有給(特別),実働,控除、摘要（勤怠詳細オーダーIDの結合）
     # 2. 以上のデータを2次元マトリックスに加工する。
     # 例）
@@ -72,7 +72,7 @@ class Attendance < ApplicationRecord
     # 何もない日は、空文字（''）を入れる
 
     result = []
-    (self.first.base_date.beginning_of_month..self.first.base_date.end_of_month).each do |day|
+    (current.to_datetime.beginning_of_month..current.to_datetime.end_of_month).each do |day|
         result.push({
           start_time:'',
           end_time:'',
