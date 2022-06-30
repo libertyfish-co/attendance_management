@@ -111,13 +111,13 @@
                     <td width="5%"><%= format_to(@attendances[month.day-1][:start_time],:am_pm)%></td>
                     <td width="2%">～</td>
                     <td width="5%"><%= format_to(@attendances[month.day-1][:end_time],:am_pm)%></td>
-                    <td width="7%"><%= @attendances[month.day-1][:working_time] %></td>
-                    <td width="7%"><%= @attendances[month.day-1][:break_time] %></td>
-                    <td width="7%"><%= @attendances[month.day-1][:operating_time] %></td>
-                    <td width="7%"><%= @attendances[month.day-1][:paid_time] %></td>
-                    <td width="7%"><%= @attendances[month.day-1][:special_paid_time] %></td>
-                    <td width="7%"><%= @attendances[month.day-1][:actual_time] %></td>
-                    <td width="7%"><%= @attendances[month.day-1][:deducation_time]%></td>
+                    <td width="7%"><%=double_convert_to_s( @attendances[month.day-1][:working_time] ) %></td>
+                    <td width="7%"><%=double_convert_to_s( @attendances[month.day-1][:break_time] ) %></td>
+                    <td width="7%"><%=double_convert_to_s( @attendances[month.day-1][:operating_time] ) %></td>
+                    <td width="7%"><%=double_convert_to_s( @attendances[month.day-1][:paid_time] ) %></td>
+                    <td width="7%"><%=double_convert_to_s( @attendances[month.day-1][:special_paid_time] ) %></td>
+                    <td width="7%"><%=double_convert_to_s( @attendances[month.day-1][:actual_time] ) %></td>
+                    <td width="7%"><%=double_convert_to_s( @attendances[month.day-1][:deducation_time])%></td>
                     <td width="42%"><%= @attendances[month.day-1][:remarks] %></td>
                 </tr>
             <% end %>

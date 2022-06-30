@@ -135,7 +135,6 @@ class Attendance < ApplicationRecord
     # Todo 警告バリデーションチェッカーを使う。
     # 2022/06/30現在、保存時trueにしておく。
     save_data[:consistency_flg] = true
-    binding.pry
     # save
     Attendance.find(attendance_details.first.attendance_id).update!(save_data)
   end

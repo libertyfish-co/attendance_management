@@ -22,4 +22,10 @@ module ApplicationHelper
       am_pm:dt.try(:strftime,"%R")
     }[format]
   end
+
+  # 引数：time(浮動小数、nil、'')
+  # 返り値：文字列（'0.00'|''）
+  def double_convert_to_s(time)
+    time.blank? ? time.to_s : time.to_s
+  end
 end
