@@ -27,8 +27,11 @@ class AttendancesController < ApplicationController
   def new
     @current = params['date'].blank? ? 
       Time.current : Time.parse(params['date'])
+    @nav_prev = @current.prev_day.strftime("%Y/%m/%d")
+    @nav_next = @current.next_day.strftime("%Y/%m/%d")
     @orders = Order.all
     @works  = Work.all
+
     if((ada = @emp.attendances.select_attendance_by_date(@current)).nil?)
       @attendance = @emp.attendances.build
       @ada_details = @attendance.attendance_details.init_attendance_detail(@attendance.id)

@@ -1,4 +1,20 @@
 <style>
+.transition{
+    font-size: 28px;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: none;
+}
+.bi{
+    color: #0060b2;
+}
+/* 備考欄 */
+.note{
+  margin-left: 75%;
+}
+/* テーブル設定 */
 thead {
   background-color: #0060b2;
   color: #fff;
@@ -25,6 +41,7 @@ table, td, th {
 .bg-blue{
   background-color: #c2c4c7;
 }
+/* 登録ボタン */
 .submit-btn {
   margin-left: 94%;
   display       : inline-block;
@@ -57,6 +74,33 @@ table, td, th {
   <% end %>
 
   <div class="mx-4">
+  
+    <!-- 先月・翌月遷移 -->
+    <div class="ml-4 transition">
+        <%= link_to new_attendance_path('date': @nav_prev) do %>
+            <i class="bi bi-arrow-left-circle"></i>
+        <% end %>
+        <%= format_to(@current,:ymd) %>
+        <%= link_to new_attendance_path('date': @nav_next) do %>
+            <i class="bi bi-arrow-right-circle"></i>
+        <% end %>
+    </div>
+
+
+    <table class="table text-center table-sm col-3 mb-4 note">
+      <thead>
+        <tr>
+          <th>備考</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><textarea class="form-control" id="exampleFormControlTextarea1" rows="1"></textarea></td>
+        </tr>
+      </tbody>
+    </table>
+
+
     <table class="table table-hover table-sm text-center">
       <thead>
         <tr>
@@ -84,7 +128,7 @@ table, td, th {
               <%= f.hidden_field :id%>
             </td>
             <td>
-              <%= f.time_field :start_time%>
+              <%= f.time_field :start_time, id: 'id_data'%>
             </td>
             <td>
               -

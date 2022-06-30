@@ -5,7 +5,6 @@ class AttendanceDetail < ApplicationRecord
 
   def self.init_attendance_detail(attendance_id)
     result = []
-    p self.class
     self.all.each do |attendance_detail|
       result.push(attendance_detail)
     end
