@@ -49,6 +49,7 @@ class AttendancesController < ApplicationController
 
   # POST /attendances or /attendances.json
   def create
+    binding.pry
     @attendance = Attendance.new(filter_with_filled_form)
 
     respond_to do |format|
