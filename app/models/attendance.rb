@@ -63,7 +63,6 @@ class Attendance < ApplicationRecord
   # ～に勤怠データを加工する。
   # 月勤怠画面用のデータを加工する。
   # ※勤怠がない日にちも空文字入れて必ず、１～月末までデータをモデル側で作っておく。
-  # ビュー楽になるからね
   def self.process_in_month
     # 1. 必要なデータ:開始時間、終了時間、作業,休憩,稼働,有給(一般),有給(特別),実働,控除、摘要（勤怠詳細オーダーIDの結合）
     # 2. 以上のデータを2次元マトリックスに加工する。
@@ -71,7 +70,6 @@ class Attendance < ApplicationRecord
     # [{start_time:Tue, 28 Jun 2022 09:47:29 JST +09:00,end_time:Tue, 28 Jun 2022 18:47:29 JST +09:00...},
     # {start_time:'',end_time:''...}]
     # 何もない日は、空文字（''）を入れる
-    # ※filter_byメソッドを使うこと。
 
     result = []
     (self.first.base_date.beginning_of_month..self.first.base_date.end_of_month).each do |day|
@@ -79,7 +77,7 @@ class Attendance < ApplicationRecord
           start_time:'',
           end_time:'',
           working_time:"",
-          rest_time:"",
+          break_time:"",
           operating_time:'',
           paid_time:'',
           special_paid_time:'',
@@ -110,6 +108,36 @@ class Attendance < ApplicationRecord
   # 週勤怠へ勤怠レコードｓを加工する。
   def self.process_in_week
 
+  end
+
+  # 勤怠詳細から勤怠へ時間内訳と開始・終了時刻と整合性フラグを算出して保存する処理
+  def self.calc_times_and_consistency_flg_and_save(attendance_details)
+    save_data = {
+      start_time:nil,end_time:nil,break_time:"",
+      operating_time:'',paid_time:'',special_paid_time:'',
+      deduction_time:'',consistency_flg: false
+    }
+    # 時間内訳計算
+    [['稼働時間',0,:operating_time],['休憩時間',1,:break_time],['控除時間',2,:deduction_time],
+    ['一般有給',3,:paid_time],['特別有給',4,:special_paid_time]].each do |t_detail,itemized_time,symbol|
+      orders = Order.where(itemized_time: itemized_time)
+      # オーダーからdetailsを検索。ヒットした分の時間を足し合わせる
+      save_data[symbol] = attendance_details.where(order_id: orders.ids).
+        map{|r| (r.end_time-r.start_time)/(60*60)}.sum
+    end
+
+    #　開始・終了時間
+    orderd_r = attendance_details.order(start_time: "ASC")
+    save_data[:start_time] = orderd_r.first.start_time
+    save_data[:end_time] = orderd_r.last.end_time
+
+    # 整合性フラグ
+    # Todo 警告バリデーションチェッカーを使う。
+    # 2022/06/30現在、保存時trueにしておく。
+    save_data[:consistency_flg] = true
+    binding.pry
+    # save
+    Attendance.find(attendance_details.first.attendance_id).update!(save_data)
   end
 
 

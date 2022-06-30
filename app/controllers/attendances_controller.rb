@@ -49,13 +49,13 @@ class AttendancesController < ApplicationController
 
   # POST /attendances or /attendances.json
   def create
-    binding.pry
     @attendance = Attendance.new(filter_with_filled_form)
 
     respond_to do |format|
       if @attendance.save
+        Attendance.calc_times_and_consistency_flg_and_save(@attendance.attendance_details)
         format.html { redirect_to attendance_url(@attendance), notice: "Attendance was successfully created." }
-        format.json { render :show, status: :created, location: @attendance }
+        format.json { render :new, status: :created, location: @attendance }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @attendance.errors, status: :unprocessable_entity }
@@ -88,7 +88,6 @@ class AttendancesController < ApplicationController
       format.json { head :no_content }
     end
   end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_attendance
@@ -109,7 +108,5 @@ class AttendancesController < ApplicationController
       result[:attendance_details_attributes] = result[:attendance_details_attributes].select{|k,v|!v[:start_time].blank?&&!v[:end_time].blank?}
       result
     end
-    def month_params
-      
-    end
+
 end
