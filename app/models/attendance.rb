@@ -91,12 +91,12 @@ class Attendance < ApplicationRecord
       result[day-1] = { 
         start_time:j_attendance.start_time,
         end_time:j_attendance.end_time,
-        working_time:j_attendance.operating_time.to_i+j_attendance.break_time.to_i,
-        break_time:j_attendance.break_time.to_i,
-        operating_time:j_attendance.operating_time.to_i,
-        paid_time:j_attendance.paid_time.to_i,
-        special_paid_time:j_attendance.special_paid_time.to_i,
-        actual_time:j_attendance.operating_time.to_i+j_attendance.paid_time.to_i+j_attendance.special_paid_time.to_i,
+        working_time:j_attendance.operating_time.to_f+j_attendance.break_time.to_f,
+        break_time:j_attendance.break_time.to_f,
+        operating_time:j_attendance.operating_time.to_f,
+        paid_time:j_attendance.paid_time.to_f,
+        special_paid_time:j_attendance.special_paid_time.to_f,
+        actual_time:j_attendance.operating_time.to_f+j_attendance.paid_time.to_f+j_attendance.special_paid_time.to_f,
         deduction_time:j_attendance.deduction_time,
         remarks: j_attendance.attendance_details.join_work_contents
       }
