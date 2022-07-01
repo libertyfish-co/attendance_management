@@ -53,6 +53,13 @@ class AttendancesController < ApplicationController
   def create
 
     @attendance = Attendance.new(filter_with_filled_form)
+    if (errors = AttendanceDetail.valid?(@attendance.attendance_details).length) > 0
+      flash['errors'] = errors
+    end
+
+    if (warning = AttendanceDetail.warning?(@attendance.attendance_details).length > 0)
+      flash['warning'] = warning
+    end
     respond_to do |format|
       ActiveRecord::Base.transaction do
         if @attendance.save
