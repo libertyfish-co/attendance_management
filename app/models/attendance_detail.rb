@@ -18,7 +18,10 @@ class AttendanceDetail < ApplicationRecord
 
   def self.join_work_contents
     result = ""
-    self.all.each{|a|result << a.order.name}
+    self.all.each{|a|
+      return "" if a.order_id.blank?
+      result << a.order.name
+    }
     result
   end
 
