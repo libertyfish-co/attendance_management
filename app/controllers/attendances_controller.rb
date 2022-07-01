@@ -55,6 +55,7 @@ class AttendancesController < ApplicationController
     @attendance = Attendance.new(filter_with_filled_form)
     if (errors = AttendanceDetail.valid?(@attendance.attendance_details).length) > 0
       flash['errors'] = errors
+      redirect_back(fallback_location: root_path)
     end
 
     if (warning = AttendanceDetail.warning?(@attendance.attendance_details).length > 0)
