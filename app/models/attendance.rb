@@ -42,13 +42,16 @@ class Attendance < ApplicationRecord
     # シンボル毎にresultに代入していく
     [:break_time,:operating_time,:paid_time,
       :special_paid_time,:deduction_time].each do |symbol|
-        result[symbol] = self.all.sum(symbol)
+        div, mod = self.all.sum(symbol).divmod(60)
+        result[symbol] = div+(mod/60.0).floor(2)
     end
-
+binding.pry
     # work_time,actual_time 
     nil_operating_time = self.where.not(operating_time: nil).all.sum(:break_time)
-    result[:work_time] = result[:operating_time]+nil_operating_time
-    result[:actual_time] = result[:operating_time]+result[:paid_time]+result[:special_paid_time]
+    result[:work_time] = minutes_to_hour_and_decmltime(result[:operating_time].to_f+nil_operating_time)
+    result[:actual_time] = minutes_to_hour_and_decmltime(
+      result[:operating_time].to_f+result[:paid_time].to_f+result[:special_paid_time].to_f
+    )
 
     return result
   end

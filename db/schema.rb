@@ -38,8 +38,8 @@ ActiveRecord::Schema.define(version: 2022_07_01_015519) do
 
   create_table "attendance_details", force: :cascade do |t|
     t.bigint "attendance_id", null: false
-    t.bigint "order_id", null: false
-    t.bigint "work_id", null: false
+    t.bigint "order_id"
+    t.bigint "work_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "start_time"

@@ -1,6 +1,9 @@
 <%# javascript_pack_tag 'attendances/index'%>
 <%# javascript_pack_tag 'attendances/index'%>
 <style>
+    .title{
+        text-align: center;
+    }
     .transition{
         font-size: 28px;
         margin-bottom: 10px;
@@ -53,9 +56,6 @@
         background-color: #9dd7fb;
     }
 
-    .btn{
-        margin-left: 59.5%;
-    }
     button{
         width: 150px;
         border: 1px #3d3f9e solid;
@@ -68,15 +68,21 @@
     }
 </style>
 
-<!-- 先月・翌月遷移 -->
-<div class="ml-4 transition">
-    <%= link_to attendances_path('date': @nav_prev) do %>
-        <i class="bi bi-arrow-left-circle"></i>
-    <% end %>
-    <%= format_to(@month,:ym) %>
-    <%= link_to attendances_path('date': @nav_next) do %>
-        <i class="bi bi-arrow-right-circle"></i>
-    <% end %>
+<div class="mx-4 row">
+    <!-- 先月・翌月遷移 -->
+    <div class="col-4 transition">
+        <%= link_to attendances_path('date': @nav_prev) do %>
+            <i class="bi bi-arrow-left-circle"></i>
+        <% end %>
+        <%= format_to(@month,:ym) %>
+        <%= link_to attendances_path('date': @nav_next) do %>
+            <i class="bi bi-arrow-right-circle"></i>
+        <% end %>
+    </div>
+
+    <h2 class="col-4 title">
+        月勤怠表
+    </h2>
 </div>
 
 <div class="mx-4">
@@ -124,22 +130,24 @@
             <!-- 勤怠時間の集計表示 -->
             <tr>
                 <td colspan="5">合計</td>
-                <td colspan="1"><%= sprintf("%10.2f", @sum[:work_time]) %></td>
-                <td colspan="1"><%= sprintf("%10.2f", (@sum[:break_time])) %></td>
-                <td colspan="1"><%= sprintf("%10.2f", (@sum[:operating_time])) %></td>
-                <td colspan="1"><%= sprintf("%10.2f", (@sum[:paid_time])) %></td>
-                <td colspan="1"><%= sprintf("%10.2f", (@sum[:special_paid_time])) %></td>
-                <td colspan="1"><%= sprintf("%10.2f", (@sum[:actual_time])) %></td>
-                <td colspan="1"><%= sprintf("%10.2f", (@sum[:deduction_time])) %></td>
+                <td colspan="1"><%= @sum[:work_time] %></td>
+                <td colspan="1"><%= (@sum[:break_time]) %></td>
+                <td colspan="1"><%= (@sum[:operating_time]) %></td>
+                <td colspan="1"><%= (@sum[:paid_time]) %></td>
+                <td colspan="1"><%= (@sum[:special_paid_time]) %></td>
+                <td colspan="1"><%= (@sum[:actual_time]) %></td>
+                <td colspan="1"><%= (@sum[:deduction_time]) %></td>
             </tr>
         </tbody>
     </table>
 </div>
 
-<div class="btn">
-    <button type="button">チェック</button>
-    <button type="button" class="ml-4">帳簿出力</button>
-    <button type="button" class="ml-4">オーダー別</button>
+<div class="clearfix mx-4">
+    <div class="float-right">
+        <button type="button">チェック</button>
+        <button type="button" class="ml-4">帳簿出力</button>
+        <button type="button" class="ml-4">オーダー別</button>
+    </div>
 </div>
 
 <script>
