@@ -1,7 +1,7 @@
 <div class="padding-20px">
     <div class="fontSize-13px padding-10px0px">
-    <div>会社：<%= sprintf("%04d", current_employee.corporation.id) %>　　<%= current_employee.corporation.name %></div>
-    <div>社員：<%= current_employee.employee_code %>　　<%= current_employee.name %></div>
+    <div>会社：<%= sprintf("%04d", @emp.corporation.id) %>　　<%= @emp.corporation.name %></div>
+    <div>社員：<%= @emp.employee_code %>　　<%= @emp.name %></div>
     </div>
     <nav class="navbar navbar-expand-lg navbar-light padding-0">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
