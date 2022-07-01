@@ -5,9 +5,7 @@ class Attendance < ApplicationRecord
   accepts_nested_attributes_for :attendance_details
 
   def self.select_attendance_by_date(date)
-    ada = self.where(base_date: (date.beginning_of_day)..(date.end_of_day)).all
-    # 複数件ヒットした場合、データ不整合につき、nilを返す。
-    return ada.length == 1? ada.first : nil
+    self.where(base_date: (date.beginning_of_day)..(date.end_of_day))
   end
   
   # 基準日から勤怠を検索する。
@@ -25,8 +23,8 @@ class Attendance < ApplicationRecord
   end
   
   # 月間勤怠レコード
-  def self.monthly_attendance_record(dt,format,table_names)
-    self.select_at(dt,format).join_table(table_names)
+  def self.monthly_attendance_record(dt)
+    self.select_at(dt,:month).join_table(:attendance_details)
   end
 
   # Todo
@@ -123,7 +121,7 @@ class Attendance < ApplicationRecord
       orders = Order.where(itemized_time: itemized_time)
       # オーダーからdetailsを検索。ヒットした分の時間を足し合わせる
       save_data[symbol] = attendance_details.where(order_id: orders.ids).
-        map{|r| (r.end_time-r.start_time)/(60*60)}.sum
+        map{|r| (ad.end_time.hour-ad.start_time.hour)*60+(ad.end_time.min-ad.start_time.min).abs}.sum
     end
 
     #　開始・終了時間

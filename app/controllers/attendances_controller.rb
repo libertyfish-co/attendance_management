@@ -10,7 +10,7 @@ class AttendancesController < ApplicationController
 
     @nav_next = @month.next_month.strftime("%Y/%m")
 
-    @attendances = @emp.attendances.monthly_attendance_record(@month,:month,:attendance_details).
+    @attendances = @emp.attendances.monthly_attendance_record(@month).
       order(base_date: "ASC").process_in_month(@month)
 
     @sum = @emp.attendances.select_at(@month,:month).aggregate_time
@@ -32,7 +32,7 @@ class AttendancesController < ApplicationController
     @orders = Order.all
     @works  = Work.all
 
-    if((ada = @emp.attendances.select_attendance_by_date(@current)).nil?)
+    if((ada = @emp.attendances.select_attendance_by_date(@current).first).nil?)
       @attendance = @emp.attendances.build
       @ada_details = @attendance.attendance_details.init_attendance_detail(@attendance.id)
 
@@ -54,13 +54,15 @@ class AttendancesController < ApplicationController
 
     @attendance = Attendance.new(filter_with_filled_form)
     respond_to do |format|
-      if @attendance.save
-        Attendance.calc_times_and_consistency_flg_and_save(@attendance.attendance_details)
-        format.html { redirect_to attendance_url(@attendance), notice: "Attendance was successfully created." }
-        format.json { render :new, status: :created, location: @attendance }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @attendance.errors, status: :unprocessable_entity }
+      ActiveRecord::Base.transaction do
+        if @attendance.save
+          Attendance.calc_times_and_consistency_flg_and_save(@attendance.attendance_details)
+          format.html { redirect_to attendance_url(@attendance), notice: "Attendance was successfully created." }
+          format.json { render :new, status: :created, location: @attendance }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @attendance.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -70,13 +72,15 @@ class AttendancesController < ApplicationController
     @orders = Order.all
     @works  = Work.all
     respond_to do |format|
-      if @attendance.update!(filter_with_filled_form)
-        Attendance.calc_times_and_consistency_flg_and_save(@attendance.attendance_details)
-        format.html { redirect_to attendance_url(@attendance), notice: "Attendance was successfully updated." }
-        format.json { render :new, status: :ok, location: @attendance }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @attendance.errors, status: :unprocessable_entity }
+      ActiveRecord::Base.transaction do
+        if @attendance.update!(filter_with_filled_form)
+          Attendance.calc_times_and_consistency_flg_and_save(@attendance.attendance_details)
+          format.html { redirect_to attendance_url(@attendance), notice: "Attendance was successfully updated." }
+          format.json { render :new, status: :ok, location: @attendance }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @attendance.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
