@@ -14,15 +14,18 @@
         <div class="mr-auto d-flex">
         </div>
         <div class="my-lg-0input-group-prepend header__select__adjust">
-            <select class="form-control" id="transitionControlSelect" onChange="location.href=value;">
+            <select class="form-control" id="transitionControlSelect">
                 <option></option>
-                <option value="/attendances">月勤怠表</option>
-                <option value="/attendances/new">勤怠登録</option>
-                <option value="/sale/new">印鑑登録</option>
-                <option value="/patterns">パターン一覧</option>
-                <option value="/seal/new">ハンコ登録</option>
-                <option value="/employees/password/edit">パスワード変更</option>
-                <option value="/employees/sign_out">ログアウト</option>
+                <% [["/attendances","月勤怠表",:get],["/attendances/new",'勤怠登録',:get],
+                ['/sale/new','印鑑登録',:get],["/patterns",'パターン一覧',:get],
+                ['/sale/new','ハンコ登録',:get],['/employees/password/edit','パスワード変更',:get],
+                ['/employees/sign_out','ログアウト',:delete]].each do |path,title,method|%>
+                    <option>
+                      <%= link_to(path, {method: method}) do%>
+                        <%= title %>
+                      <% end %>
+                    </option>
+                <% end %>
             </select>
         </div>
     </div>
