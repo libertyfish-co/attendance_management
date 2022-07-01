@@ -1,6 +1,9 @@
 <%# javascript_pack_tag 'attendances/index'%>
 <%# javascript_pack_tag 'attendances/index'%>
 <style>
+    .title{
+        text-align: center;
+    }
     .transition{
         font-size: 28px;
         margin-bottom: 10px;
@@ -68,15 +71,21 @@
     }
 </style>
 
-<!-- 先月・翌月遷移 -->
-<div class="ml-4 transition">
-    <%= link_to attendances_path('date': @nav_prev) do %>
-        <i class="bi bi-arrow-left-circle"></i>
-    <% end %>
-    <%= format_to(@month,:ym) %>
-    <%= link_to attendances_path('date': @nav_next) do %>
-        <i class="bi bi-arrow-right-circle"></i>
-    <% end %>
+<div class="mx-4 row">
+    <!-- 先月・翌月遷移 -->
+    <div class="col-4 transition">
+        <%= link_to attendances_path('date': @nav_prev) do %>
+            <i class="bi bi-arrow-left-circle"></i>
+        <% end %>
+        <%= format_to(@month,:ym) %>
+        <%= link_to attendances_path('date': @nav_next) do %>
+            <i class="bi bi-arrow-right-circle"></i>
+        <% end %>
+    </div>
+
+    <h2 class="col-4 title">
+        月勤怠表
+    </h2>
 </div>
 
 <div class="mx-4">
