@@ -89,13 +89,13 @@ class Attendance < ApplicationRecord
       result[day-1] = { 
         start_time:j_attendance.start_time,
         end_time:j_attendance.end_time,
-        working_time:j_attendance.operating_time.to_f+j_attendance.break_time.to_f,
-        break_time:j_attendance.break_time.to_f,
-        operating_time:j_attendance.operating_time.to_f,
-        paid_time:j_attendance.paid_time.to_f,
-        special_paid_time:j_attendance.special_paid_time.to_f,
-        actual_time:j_attendance.operating_time.to_f+j_attendance.paid_time.to_f+j_attendance.special_paid_time.to_f,
-        deduction_time:j_attendance.deduction_time,
+        working_time:      minutes_to_hour_and_decmltime(j_attendance.operating_time.to_i+j_attendance.break_time.to_i),
+        break_time:        minutes_to_hour_and_decmltime(j_attendance.break_time.to_i),
+        operating_time:    minutes_to_hour_and_decmltime(j_attendance.operating_time.to_i),
+        paid_time:         minutes_to_hour_and_decmltime(j_attendance.paid_time.to_i),
+        special_paid_time: minutes_to_hour_and_decmltime(j_attendance.special_paid_time.to_i),
+        actual_time:       minutes_to_hour_and_decmltime(j_attendance.operating_time.to_i+j_attendance.paid_time.to_i+j_attendance.special_paid_time.to_i),
+        deduction_time:    minutes_to_hour_and_decmltime(j_attendance.deduction_time.to_i),
         remarks: j_attendance.attendance_details.join_work_contents
       }
     end
@@ -121,7 +121,7 @@ class Attendance < ApplicationRecord
       orders = Order.where(itemized_time: itemized_time)
       # オーダーからdetailsを検索。ヒットした分の時間を足し合わせる
       save_data[symbol] = attendance_details.where(order_id: orders.ids).
-        map{|r| (ad.end_time.hour-ad.start_time.hour)*60+(ad.end_time.min-ad.start_time.min).abs}.sum
+        map{|r| (r.end_time.hour-r.start_time.hour)*60+(r.end_time.min-r.start_time.min).abs}.sum
     end
 
     #　開始・終了時間
@@ -157,6 +157,11 @@ class Attendance < ApplicationRecord
         :paid_time, :special_paid_time, :deduction_time, :work_content],
       'week_attendance': []
     }[page_name]
+  end
+
+  def self.minutes_to_hour_and_decmltime(minutes)
+    div, mod = minutes.divmod(60)
+    sprintf("%0.2f",(div+(mod/60.0).floor(2)))
   end
 
   private_class_method :filter_by, :nessarry_colmun_of
