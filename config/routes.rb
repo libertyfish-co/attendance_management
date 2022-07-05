@@ -7,7 +7,6 @@ Rails.application.routes.draw do
   }
   resources :attendances do
     collection do
-      get :month
       get :week
     end
   end

@@ -1,0 +1,47 @@
+<%= link_to @month.prev_month.strftime("%Y/%m"), month_attendances_path('date': @nav_prev) %>
+<%= @month.strftime("%Y/%m") %>
+<%= link_to @month.next_month.strftime("%Y/%m"), month_attendances_path('date': @nav_next) %>
+
+<table>
+    <thead>
+        <tr>
+            <th rowspan="2", colspan="1">日</th>
+            <th rowspan="2", colspan="1">曜日</th>
+            <th rowspan="2", colspan="3">時刻</th>
+            <th rowspan="1", colspan="7">時間内訳</th>
+            <th rowspan="2", colspan="1">摘要</th>
+        </tr>
+        <tr>
+            <th rowspan="1", colspan="1">作業</th>
+            <th rowspan="1", colspan="1">休憩</th>
+            <th rowspan="1", colspan="1">稼働</th>
+            <th rowspan="1", colspan="1">有給(一般)</th>
+            <th rowspan="1", colspan="1">有給(特別)</th>
+            <th rowspan="1", colspan="1">実働</th>
+            <th rowspan="1", colspan="1">控除</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% (@month.beginning_of_month..@month.end_of_month).each do |month| %>
+        <tr>
+            <td><%= month.strftime("%d") %></td>
+            <td><%= month.strftime("#{@dw[month.wday]}") %></td>
+            <td></td>
+            <td>～</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>
+
+
+<button type="button">チェック</button>
+<button type="button">帳簿出力</button>
+<button type="button">オーダー別</button>

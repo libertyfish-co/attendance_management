@@ -20,7 +20,7 @@ class Employees::SessionsController < Devise::SessionsController
    end
 
    def after_sign_in_path_for(resource)
-    month_attendances_path
+    attendances_path
   end
 
   def after_sign_out_path_for(resource)

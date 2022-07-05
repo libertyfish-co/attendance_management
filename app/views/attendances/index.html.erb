@@ -1,37 +1,155 @@
-<p id="notice"><%= notice %></p>
+<%# javascript_pack_tag 'attendances/index'%>
+<%# javascript_pack_tag 'attendances/index'%>
+<style>
+    .title{
+        text-align: center;
+    }
+    .transition{
+        font-size: 28px;
+        margin-bottom: 10px;
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: none;
+    }
+    .bi{
+        color: #0060b2;
+    }
+    table{
+        font-size: 14px;
+    }
+    thead {
+        background-color: #0060b2;
+        color: #fff;
+    }
+    table tr th.pb{
+        padding-bottom: 21px;
+    }
+    table tr th.pb2{
+        padding-bottom: 10px;
+    }
+    table, td, th {
+        border: 2px #3d3f9e solid;
+    }
+    .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px #3d3f9e solid;
+    }
+    .border-bottom {
+        border-bottom: 2px #3d3f9e solid !important;
+    }
+    .border-top{
+        border-top: none;
+    }
+    .side-line{
+        border-right:none;
+    }
+    .today{
+        background-color: #ffc107;
+    }
+    .sat {
+        color: #0000ff;
+        background-color: #9dd7fb;
+    }
+    .sun{
+        color: #FF0000;
+        background-color: #9dd7fb;
+    }
 
-<h1>Attendances</h1>
+    button{
+        width: 150px;
+        border: 1px #3d3f9e solid;
+        appearance: none;
+        border-radius: 5px;
+        background: #0060b2;
+        color: #fff;
+        padding: 8px 16px;
+        font-size: 16px;
+    }
+</style>
 
-<table>
-  <thead>
-    <tr>
-      <th>Corporation</th>
-      <th>Employee</th>
-      <th>Start time</th>
-      <th>End time</th>
-      <th>Rest time</th>
-      <th>Work content</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+<div class="mx-4 row">
+    <!-- 先月・翌月遷移 -->
+    <div class="col-4 transition">
+        <%= link_to attendances_path('date': @nav_prev) do %>
+            <i class="bi bi-arrow-left-circle"></i>
+        <% end %>
+        <%= format_to(@month,:ym) %>
+        <%= link_to attendances_path('date': @nav_next) do %>
+            <i class="bi bi-arrow-right-circle"></i>
+        <% end %>
+    </div>
 
-  <tbody>
-    <% @attendances.each do |attendance| %>
-      <tr>
-        <td><%= attendance.corporation_id %></td>
-        <td><%= attendance.employee_id %></td>
-        <td><%= attendance.start_time %></td>
-        <td><%= attendance.end_time %></td>
-        <td><%= attendance.rest_time %></td>
-        <td><%= attendance.work_content %></td>
-        <td><%= link_to 'Show', attendance %></td>
-        <td><%= link_to 'Edit', edit_attendance_path(attendance) %></td>
-        <td><%= link_to 'Destroy', attendance, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+    <h2 class="col-4 title">
+        月勤怠表
+    </h2>
+</div>
 
-<br>
+<div class="mx-4">
+    <table class="table table-hover table-sm text-center">
+        <thead>
+            <tr>
+                <th rowspan="2" width="2%" class="pb">日</th>
+                <th rowspan="2" width="2%" class="pb2">曜日</th>
+                <th rowspan="2", colspan="3" width="12%" class="pb">時刻</th>
+                <th colspan="7" width="42%" class="border-bottom">時間内訳</th>
+                <th rowspan="2" width="42%" class="pb">摘要</th>
+            </tr>
+            <tr>
+                <th class="border-top">作業</th>
+                <th class="border-top">休憩</th>
+                <th class="border-top">稼働</th>
+                <th class="border-top">有給(一般)</th>
+                <th class="border-top">有給(特別)</th>
+                <th class="border-top">実働</th>
+                <th class="border-top">控除</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% (@month.to_datetime.beginning_of_month..@month.to_datetime.end_of_month).each do |month| %>
+                <tr class="<%= "today" if month.today? %>" onclick='window.location.href = "/attendances/new?date=<%= month%>"'>
+                    <td width="2%" class="holiday <%= "sat" if month.saturday? %> <%= "sun" if month.sunday? %>">
+                        <%= format_to(month,:day) %>
+                    </td>
+                    <td width="2%" class="<%= "sat" if month.saturday? %> <%= "sun" if month.sunday? %>">
+                        <%= format_to(month,:wday) %>
+                    </td>
+                    <td width="5%"><%= format_to(@attendances[month.day-1][:start_time],:am_pm)%></td>
+                    <td width="2%">～</td>
+                    <td width="5%"><%= format_to(@attendances[month.day-1][:end_time],:am_pm)%></td>
+                    <td width="7%"><%=@attendances[month.day-1][:working_time] %></td>
+                    <td width="7%"><%=@attendances[month.day-1][:break_time] %></td>
+                    <td width="7%"><%=@attendances[month.day-1][:operating_time] %></td>
+                    <td width="7%"><%=@attendances[month.day-1][:paid_time] %></td>
+                    <td width="7%"><%=@attendances[month.day-1][:special_paid_time] %></td>
+                    <td width="7%"><%=@attendances[month.day-1][:actual_time] %></td>
+                    <td width="7%"><%=@attendances[month.day-1][:deducation_time] %></td>
+                    <td width="42%"><%= @attendances[month.day-1][:remarks] %></td>
+                </tr>
+            <% end %>
+            <!-- 勤怠時間の集計表示 -->
+            <tr>
+                <td colspan="5">合計</td>
+                <td colspan="1"><%= @sum[:work_time] %></td>
+                <td colspan="1"><%= (@sum[:break_time]) %></td>
+                <td colspan="1"><%= (@sum[:operating_time]) %></td>
+                <td colspan="1"><%= (@sum[:paid_time]) %></td>
+                <td colspan="1"><%= (@sum[:special_paid_time]) %></td>
+                <td colspan="1"><%= (@sum[:actual_time]) %></td>
+                <td colspan="1"><%= (@sum[:deduction_time]) %></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
-<%= link_to 'New Attendance', new_attendance_path %>
+<div class="clearfix mx-4">
+    <div class="float-right">
+        <button type="button">チェック</button>
+        <button type="button" class="ml-4">帳簿出力</button>
+        <button type="button" class="ml-4">オーダー別</button>
+    </div>
+</div>
+
+<script>
+  
+</script>
