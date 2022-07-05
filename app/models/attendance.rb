@@ -45,7 +45,7 @@ class Attendance < ApplicationRecord
         div, mod = self.all.sum(symbol).divmod(60)
         result[symbol] = div+(mod/60.0).floor(2)
     end
-binding.pry
+
     # work_time,actual_time 
     nil_operating_time = self.where.not(operating_time: nil).all.sum(:break_time)
     result[:work_time] = minutes_to_hour_and_decmltime(result[:operating_time].to_f+nil_operating_time)
