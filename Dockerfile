@@ -18,7 +18,8 @@ COPY Gemfile /attendance_management/Gemfile
 COPY Gemfile.lock /attendance_management/Gemfile.lock
 RUN bundle install
 COPY . /attendance_management
-
+RUN yarn install --check-files
+RUN bundle exec rails webpacker:install
 RUN bundle exec rails webpacker:compile
 
 # Add a script to be executed every time the container starts.
