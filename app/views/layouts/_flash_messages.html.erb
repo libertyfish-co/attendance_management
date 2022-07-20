@@ -1,9 +1,0 @@
-<div><%= flash[:success] %></div>
-
-<% flash[:errors].try(:each) do |message| %>
-    <div class="text-danger"><%= message[1] %></div>
-<% end %>
-
-<% flash[:warning].try(:each) do |message| %>
-  <div class="text-danger"><%= message[1] %></div>
-<% end %>

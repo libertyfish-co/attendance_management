@@ -60,11 +60,11 @@ table, td, th {
 }
 </style>
 
-<%= form_for(@attendance) do |ada| %>
+<%= form_with model: @attendance, local: false do |ada| %>
   <%= ada.hidden_field :employee_id, value: @attendance.employee_id %>
   <%= ada.hidden_field :base_date, value: @current %>
   <%= ada.hidden_field :id, value: @attendance.id %>
-  <%= render 'layouts/flash_messages' %>
+  <%= render 'layouts/errors', errors: @errors %>
 
   <div class="row mx-4">
     <!-- 先月・翌月遷移 -->

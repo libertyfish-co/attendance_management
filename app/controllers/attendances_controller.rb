@@ -31,6 +31,7 @@ class AttendancesController < ApplicationController
     @nav_next = @current.next_day.strftime("%Y/%m/%d")
     @orders = Order.all
     @works  = Work.all
+
     if((ada = @emp.attendances.select_attendance_by_date(@current).first).nil?)
       @attendance = @emp.attendances.build
       @ada_details = @attendance.attendance_details.init_attendance_detail(@attendance.id)
@@ -39,6 +40,11 @@ class AttendancesController < ApplicationController
       @attendance = ada
       @ada_details = ada.attendance_details.init_attendance_detail(@attendance.id)
 
+    end
+    @errors = errors = AttendanceDetail.valid?(@attendance.attendance_details)
+
+    if ((warning = AttendanceDetail.warning?(@attendance.attendance_details)).length > 0)
+      @errors += warning
     end
   end
 
@@ -75,20 +81,17 @@ class AttendancesController < ApplicationController
   def update
     @orders = Order.all
     @works  = Work.all
-    errors = AttendanceDetail.valid?(@attendance.attendance_details)
+    @errors = errors = AttendanceDetail.valid?(@attendance.attendance_details)
 
     if ((warning = AttendanceDetail.warning?(@attendance.attendance_details)).length > 0)
-      flash[:warning] = warning
+      @errors += warning
     end
     ActiveRecord::Base.transaction do
       if errors.length < 1 && @attendance.update!(filter_with_filled_form)
         Attendance.calc_times_and_consistency_flg_and_save(@attendance.attendance_details)
-        flash[:success] = '登録に成功しました。'
-        redirect_to new_attendance_path(date: @attendance.base_date)
-      else
-        flash[:errors] = errors
-        # 非同期
+        @errors = [['success', '登録に成功しました。']]
       end
+      redirect_to action: :new, date: @attendance.base_date
     end
   end
 

@@ -1,0 +1,7 @@
+<% errors.try(:each) do |error_type,message| %>
+  <% if error_type == "success"%>
+    <div><%= message %></div>
+  <% else %>
+    <div class="text-danger"><%= message %></div>
+  <% end %>
+<% end %>
