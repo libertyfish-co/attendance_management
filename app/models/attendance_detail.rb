@@ -30,7 +30,7 @@ class AttendanceDetail < ApplicationRecord
   # 返り値：配列（[[エラーコード、エラー内容],...]）
   def self.valid?(a_details)
     result = {}
-    a_details = a_details.select{|k,v|!v[:start_time].blank? || !v[:end_time].blank?}
+    a_details = a_details.select{|a|!a.start_time.blank? || !a.end_time.blank?}
     if Range.overlap?(a_details.map{|a_d|a_d.start_time..a_d.end_time})
       result[:uniqe_err] = "E005008  時間が重複しています。重複しないように時刻を入力してください。".force_encoding("UTF-8")
     end
@@ -42,7 +42,7 @@ class AttendanceDetail < ApplicationRecord
       if a_detail.start_time > a_detail.end_time
         result[:start_bigger_err] = "E005009 開始時刻は終了時刻より前を入力してください。".force_encoding("UTF-8")
       end
-      if !(a_detail.start_time.blank? && a_detail.end_time.blank?)
+      if (a_detail.start_time.blank? && a_detail.end_time.blank?)
         result[:times_lack_err] = "E005010 時刻をすべて入力してください。".force_encoding("UTF-8")
       end
     end
@@ -54,9 +54,9 @@ class AttendanceDetail < ApplicationRecord
   # 返り値：配列（[[エラーコード、エラー内容],...]）
   def self.warning?(a_details)
     result = {}
-    a_details = a_details.select{|k,v|!v[:start_time].blank? || !v[:end_time].blank?}
+    a_details = a_details.select{|a|!a.start_time.blank? || !a.end_time.blank?}
 
-     a_details.each do |a_detail|
+    a_details.each do |a_detail|
       if a_detail.order_id.nil?
         result[:order_nil_err] = "E005011 オーダーを入力してください。".force_encoding("UTF-8")
       end
