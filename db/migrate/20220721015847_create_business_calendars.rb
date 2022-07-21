@@ -3,7 +3,7 @@ class CreateBusinessCalendars < ActiveRecord::Migration[6.0]
     create_table :business_calendars do |t|
       t.references :corporation, null: false, foreign_key: true
       t.date :date
-      t.string :attribute
+      t.string :proparties
 
       t.timestamps
     end

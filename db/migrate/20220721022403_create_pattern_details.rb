@@ -7,6 +7,7 @@ class CreatePatternDetails < ActiveRecord::Migration[6.0]
       t.datetime :start_time
       t.datetime :end_time
       t.string :work_content
+      t.integer :work_time
 
       t.timestamps
     end

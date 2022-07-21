@@ -1,8 +1,7 @@
-# frozen_string_literal: true
-
-class DeviseCreateEmployees < ActiveRecord::Migration[6.0]
+class DeviceCreateEmployees < ActiveRecord::Migration[6.0]
   def change
     create_table :employees do |t|
+      t.references :department, null: false, foreign_key: true
       ## Database authenticatable
       t.string :email,              null: false, default: ""
       t.string :encrypted_password, null: false, default: ""
@@ -40,7 +39,7 @@ class DeviseCreateEmployees < ActiveRecord::Migration[6.0]
       ##苗字と名前の間は半角スペース
       t.string     :kana, null: false
       #0: 社員、1: 部長、2: 課長、3: 平社員
-      t.string     :attribute, null: false, default: "3"
+      t.string     :proparties, null: false, default: "3"
       #true: 無効、false: 有効
       t.boolean    :invalid_flag, null: false, default: false
 
