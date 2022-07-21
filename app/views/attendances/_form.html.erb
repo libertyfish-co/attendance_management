@@ -60,21 +60,11 @@ table, td, th {
 }
 </style>
 
-<%= form_for(@attendance) do |ada| %>
+<%= form_with model: @attendance, local: false do |ada| %>
   <%= ada.hidden_field :employee_id, value: @attendance.employee_id %>
   <%= ada.hidden_field :base_date, value: @current %>
   <%= ada.hidden_field :id, value: @attendance.id %>
-  <% if attendance.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(attendance.errors.count, "error") %> prohibited this attendance from being saved:</h2>
-
-      <ul>
-        <% attendance.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render 'layouts/errors', errors: @errors %>
 
   <div class="row mx-4">
     <!-- 先月・翌月遷移 -->

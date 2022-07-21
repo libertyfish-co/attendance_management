@@ -41,6 +41,11 @@ class AttendancesController < ApplicationController
       @ada_details = ada.attendance_details.init_attendance_detail(@attendance.id)
 
     end
+    @errors = errors = AttendanceDetail.valid?(@attendance.attendance_details)
+
+    if ((warning = AttendanceDetail.warning?(@attendance.attendance_details)).length > 0)
+      @errors += warning
+    end
   end
 
   # GET /attendances/1/edit
@@ -53,43 +58,40 @@ class AttendancesController < ApplicationController
   def create
 
     @attendance = Attendance.new(filter_with_filled_form)
-    if (errors = AttendanceDetail.valid?(@attendance.attendance_details).length) > 0
-      flash['errors'] = errors
-      redirect_back(fallback_location: root_path)
+    if ((errors = AttendanceDetail.valid?(@attendance.attendance_details)).length) > 0
+      flash.now[:errors] = errors
     end
 
-    if (warning = AttendanceDetail.warning?(@attendance.attendance_details).length > 0)
-      flash['warning'] = warning
+    if ((warning = AttendanceDetail.warning?(@attendance.attendance_details)).length > 0)
+      flash[:warning] = warning
     end
-    respond_to do |format|
-      ActiveRecord::Base.transaction do
+
+    ActiveRecord::Base.transaction do
         if @attendance.save
           Attendance.calc_times_and_consistency_flg_and_save(@attendance.attendance_details)
-          format.html { redirect_to attendance_url(@attendance), notice: "Attendance was successfully created." }
-          format.json { render :new, status: :created, location: @attendance }
+          flash[:success] = '登録に成功しました。'
+          redirect_to new_attendance_path(date: @attendance.base_date)
         else
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @attendance.errors, status: :unprocessable_entity }
+          render :new
         end
       end
-    end
   end
 
   # PATCH/PUT /attendances/1 or /attendances/1.json
   def update
     @orders = Order.all
     @works  = Work.all
-    respond_to do |format|
-      ActiveRecord::Base.transaction do
-        if @attendance.update!(filter_with_filled_form)
-          Attendance.calc_times_and_consistency_flg_and_save(@attendance.attendance_details)
-          format.html { redirect_to attendance_url(@attendance), notice: "Attendance was successfully updated." }
-          format.json { render :new, status: :ok, location: @attendance }
-        else
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @attendance.errors, status: :unprocessable_entity }
-        end
+    @errors = errors = AttendanceDetail.valid?(@attendance.attendance_details)
+
+    if ((warning = AttendanceDetail.warning?(@attendance.attendance_details)).length > 0)
+      @errors += warning
+    end
+    ActiveRecord::Base.transaction do
+      if errors.length < 1 && @attendance.update!(filter_with_filled_form)
+        Attendance.calc_times_and_consistency_flg_and_save(@attendance.attendance_details)
+        @errors = [['success', '登録に成功しました。']]
       end
+      redirect_to action: :new, date: @attendance.base_date
     end
   end
 
