@@ -123,24 +123,25 @@ table, td, th {
               <%= f.hidden_field :id%>
             </td>
             <td>
-              <%= f.time_field :start_time, id: 'id_data'%>
+              <%= f.time_field :start_time, data: { target: 'st', id: i} %>
             </td>
             <td>
               -
             </td>
             <td>
-              <%= f.time_field :end_time %>
+              <%= f.time_field :end_time, data: { target: 'et', id: i} %>
             </td>
             <td>
-              <%= f.collection_select :order_id, @orders, :id, :name, { include_blank: '選択してください'}, { class: 'form-control', id_data: i}%>
+              <%= f.collection_select :order_id, @orders, :id, :name, 
+                { include_blank: '選択してください'}, { class: 'form-control', data: {target: 'order', id: i}} %>
             </td>
             <td>
               <%= f.collection_select :work_id, @works, :id, :name, { include_blank: '選択してください'}, { class: 'form-control', id_data: i}%>
             </td>
-            <td class="working bg-blue">0</td>
-            <td class="rest bg-blue">0</td>
-            <td class="paid_holiday bg-blue">0</td>
-            <td class="deduction bg-blue">0</td>
+            <td class="working bg-blue" data-target="operating" data-id="<%= i %>">0</td>
+            <td class="rest bg-blue" data-target="rest" data-id="<%= i %>">0</td>
+            <td class="paid_holiday bg-blue" data-target="paid" data-id="<%= i %>">0</td>
+            <td class="deduction bg-blue" data-target="deducation" data-id="<%= i %>">0</td>
             <td>
               <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"></textarea>
             </td>
@@ -166,52 +167,77 @@ table, td, th {
 <% end %>
 
 <script>
-    function changeThText(id,key,val) {
-      console.log(id,key,val);
-      console.log(document.querySelectorAll(`[table-id]`)[id].getElementsByClassName(key)[0]);
-        document.querySelectorAll(`[table-id]`)[id].getElementsByClassName(key)[0].innerHTML = val;
+window.onload = function(){
+  for(let i=0;i<10;i++){
+    document.querySelectorAll("[data-target='st']")[i].
+      addEventListener('change', e => autoCalcTimeDetail(e));
+    document.querySelectorAll("[data-target='et']")[i].
+      addEventListener('change', e => autoCalcTimeDetail(e));;
+    document.querySelectorAll("[data-target='order']")[i].
+      addEventListener('change', e => autoCalcTimeDetail(e));
+  }
+  
+  function autoCalcTimeDetail(e){
+    const rowId = e.target.getAttribute('data-id');
+    show(calcTimeGap(rowId),rowId);
+  }
+  
+  function calcTimeGap(rowId){
+    console.log(rowId);
+    st_ms = strToDate(document.querySelectorAll("[data-target='st']")[rowId].value);
+    et_ms = strToDate(document.querySelectorAll("[data-target='et']")[rowId].value);
+    if(st == null || et == null) return 0;
+    return (et - st)/(60*60*1000);
+  }
+  
+  function strToDate(str){
+    const dt_ms = Date.parse(document.getElementById('attendance_base_date').value.
+    replace(/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]/,str))
+    return isNaN();
+  }
+  
+  # 2. 時間を指定の場所に表示
+  ## 1. orderから表示する場所を仕分ける
+  ## 2. 表示する
+  function show(hours_f,rowId){
+    order_id = getTarget('order',rowId);
+    itemized_time_h = <%= itemized_time_hash %>;
+    console.log(itemized_time_h(order_id));
+    switch(itemized_time_h(order_id)){
+      case 0:
+        //稼働
+        getTarget('operating',rowId).innerHTML = hours_f.toFixed(2);
+        brak;
+      case 1:
+        //休憩
+        getTarget('rest',rowId).innerHTML = hours_f.toFixed(2);
+        break;
+      case 2:
+        //控除
+        getTarget('deducation',rowId).innerHTML = hours_f.toFixed(2);
+        break;
+      case 3:
+        //一般有給
+        getTarget('paid',rowId).innerHTML = hours_f.toFixed(2);
+        break;
+      case 4:
+        //特別有給
+        getTarget('paid',rowId).innerHTML = hours_f.toFixed(2);
+        break;
+      default:
+        break;
     }
-    function textToDate(hours,minites) {
-      var result = new Date();
-      result.setHours(Number(hours));
-      result.setMinutes(Number(minites));
-      result.setSeconds(0);
-      return result;
-    }
-    function selectChange(event){
-      const current_id = event.target.getAttribute('id_data');
-      const val = event.target.value;
-      const row = []
-      for(var i=0; i < 10; i++){
-        row.push({working:0,rest:0,paid_holiday:0,deduction:0})
-      }
-      var start_t = textToDate(
-        document.getElementById('attendance_attendance_details_attributes_0_start_time_4i').value,
-        document.getElementById('attendance_attendance_details_attributes_0_start_time_5i').value
-      );
-      var end_t = textToDate(
-        document.getElementById('attendance_attendance_details_attributes_0_end_time_4i').value,
-        document.getElementById('attendance_attendance_details_attributes_0_end_time_5i').value
-      );    
-      //休憩
-      if(val == 1){
-        changeThText(current_id,'rest',`${(end_t - start_t)/(1000*60*60)}`)        
-        changeThText(current_id,'working',`0`);
-        changeThText(current_id,'paid_holiday',`0`);
-      }
-      //休み
-      if(val == 2){
-        changeThText(current_id,'paid_holiday',`${(end_t - start_t)/(1000*60*60)}`);
-        changeThText(current_id,'working',`0`);
-        changeThText(current_id,'rest',`0`);
-      }
-      if(val != 1 && val != 2){
-        changeThText(current_id,'working',`${(end_t - start_t)/(1000*60*60)}`);
-        changeThText(current_id,'rest',`0`);
-        changeThText(current_id,'paid_holiday',`0`);
-      }
-    }
-
-    var ele = document.getElementById('attendance_attendance_details_attributes_0_work_id');
-    ele.addEventListener('change', selectChange);
+  }
+  
+  function getTarget(target,rowId){
+    return document.querySelectorAll(`[data-target='${target}']`)[rowId];
+  }
+  
+  # todo 備考
+  # 1. 各行の備考を連結する
+  ## 備考からカーソルが外れるたびに連結を行う。
+  
+  # 2. 指定の場所に表示する。
+  ## 1で連結した値を指定の場所に表示する
+};
 </script>
