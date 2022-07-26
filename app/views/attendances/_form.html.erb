@@ -175,39 +175,40 @@ window.onload = function(){
       addEventListener('change', e => autoCalcTimeDetail(e));;
     document.querySelectorAll("[data-target='order']")[i].
       addEventListener('change', e => autoCalcTimeDetail(e));
+    init_work_breakdown(i);
+  }
+
+  function init_work_breakdown(rowId){
+    show(calcTimeGap(rowId),rowId);
   }
   
   function autoCalcTimeDetail(e){
     const rowId = e.target.getAttribute('data-id');
+    console.log(calcTimeGap(rowId),rowId);
     show(calcTimeGap(rowId),rowId);
   }
   
   function calcTimeGap(rowId){
-    console.log(rowId);
     st_ms = strToDate(document.querySelectorAll("[data-target='st']")[rowId].value);
     et_ms = strToDate(document.querySelectorAll("[data-target='et']")[rowId].value);
-    if(st == null || et == null) return 0;
-    return (et - st)/(60*60*1000);
+    if(st_ms == null || et_ms == null) return 0;
+    return (et_ms - st_ms)/(60*60*1000);
   }
   
   function strToDate(str){
     const dt_ms = Date.parse(document.getElementById('attendance_base_date').value.
     replace(/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]/,str))
-    return isNaN();
+    return isNaN(dt_ms)?0:dt_ms;
   }
   
-  # 2. 時間を指定の場所に表示
-  ## 1. orderから表示する場所を仕分ける
-  ## 2. 表示する
   function show(hours_f,rowId){
-    order_id = getTarget('order',rowId);
-    itemized_time_h = <%= itemized_time_hash %>;
-    console.log(itemized_time_h(order_id));
-    switch(itemized_time_h(order_id)){
+    order_id = getTarget('order',rowId).value;
+    itemized_time_h = <%= itemized_time_hash.to_json.html_safe %>;
+    switch(itemized_time_h[order_id]){
       case 0:
         //稼働
         getTarget('operating',rowId).innerHTML = hours_f.toFixed(2);
-        brak;
+        break;
       case 1:
         //休憩
         getTarget('rest',rowId).innerHTML = hours_f.toFixed(2);
@@ -232,12 +233,5 @@ window.onload = function(){
   function getTarget(target,rowId){
     return document.querySelectorAll(`[data-target='${target}']`)[rowId];
   }
-  
-  # todo 備考
-  # 1. 各行の備考を連結する
-  ## 備考からカーソルが外れるたびに連結を行う。
-  
-  # 2. 指定の場所に表示する。
-  ## 1で連結した値を指定の場所に表示する
 };
 </script>
