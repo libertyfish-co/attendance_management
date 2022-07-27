@@ -97,12 +97,19 @@ class AttendancesController < ApplicationController
 
   # DELETE /attendances/1 or /attendances/1.json
   def destroy
-    @attendance.destroy
 
-    respond_to do |format|
-      format.html { redirect_to attendances_url, notice: "Attendance was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    dt = Time.parse(Regexp.new('\d{4}-\d{2}-\d{2}').match(request.referer)[0])
+
+    attendance = Attendance.find_by(id: params[:id])
+
+    attendance.destroy if attendance
+
+    @attendance = @emp.attendances.build(base_date: dt)
+
+    @ada_details = @attendance.attendance_details.init_attendance_detail(@attendance.id)
+
+    redirect_to action: :new, date: dt
+
   end
   private
     # Use callbacks to share common setup or constraints between actions.
