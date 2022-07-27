@@ -90,7 +90,7 @@ table, td, th {
       </thead>
       <tbody>
         <tr>
-          <td><textarea class="form-control" id="exampleFormControlTextarea1" rows="1"></textarea></td>
+          <td><textarea class="form-control" id="attd-remark" rows="1"></textarea></td>
         </tr>
       </tbody>
     </table>
@@ -143,7 +143,7 @@ table, td, th {
             <td class="paid_holiday bg-blue" data-target="paid" data-id="<%= i %>">0</td>
             <td class="deduction bg-blue" data-target="deducation" data-id="<%= i %>">0</td>
             <td>
-              <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"></textarea>
+              <textarea class="form-control" id="exampleFormControlTextarea1" rows="1" data-id="<%=i%>" data-target="remark"></textarea>
             </td>
           </tr>
           <% i = i+1 %>
@@ -232,6 +232,34 @@ window.onload = function(){
   
   function getTarget(target,rowId){
     return document.querySelectorAll(`[data-target='${target}']`)[rowId];
+  }
+};
+</script>
+<script>
+window.onload = function(){
+
+  const workContents = document.querySelectorAll("[data-target='remark']");
+
+  for(let i=0;i<workContents.length;i++){
+    workContents[i].addEventListener('change',e=>workContentHandler(e));
+  }
+
+  function workContentHandler(e){
+
+    const rowId = e.target.getAttribute('data-id');
+
+    const workContents = document.querySelectorAll("[data-target='remark']");
+
+    const attendanceRemark = document.getElementById('attd-remark');
+
+    let remarks = "";
+    for(let i=0;i<workContents.length;i++){
+     remarks += workContents[i].value;
+    }
+
+    console.log(remarks);
+    attendanceRemark.textContent = remarks;
+
   }
 };
 </script>
