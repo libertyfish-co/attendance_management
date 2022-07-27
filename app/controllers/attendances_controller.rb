@@ -3,6 +3,7 @@ class AttendancesController < ApplicationController
 
   # GET /attendances or /attendances.json
   def index
+
     @month = params['date'].blank? ? 
       Time.current : Time.parse(params['date'])
 
@@ -14,6 +15,7 @@ class AttendancesController < ApplicationController
       order(base_date: "ASC").process_in_month(@month)
 
     @sum = @emp.attendances.select_at(@month,:month).aggregate_time
+
   end
 
   # GET /attendances/1 or /attendances/1.json

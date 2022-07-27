@@ -43,15 +43,19 @@ class Attendance < ApplicationRecord
     [:break_time,:operating_time,:paid_time,
       :special_paid_time,:deduction_time].each do |symbol|
         div, mod = self.all.sum(symbol).divmod(60)
-        result[symbol] = div+(mod/60.0).floor(2)
+        result[symbol] = (div+(mod/60.0)).floor(2)
     end
 
     # work_time,actual_time 
     nil_operating_time = self.where.not(operating_time: nil).all.sum(:break_time)
-    result[:work_time] = minutes_to_hour_and_decmltime(result[:operating_time].to_f+nil_operating_time)
-    result[:actual_time] = minutes_to_hour_and_decmltime(
-      result[:operating_time].to_f+result[:paid_time].to_f+result[:special_paid_time].to_f
-    )
+
+    div, mod = nil_operating_time.divmod(60)
+
+    result[:work_time] = result[:operating_time].to_f+(div+(mod/60.0)).floor(2)
+
+    result[:actual_time] = result[:operating_time].to_f+result[:paid_time].
+      to_f+result[:special_paid_time].to_f
+    
 
     return result
   end
@@ -87,22 +91,39 @@ class Attendance < ApplicationRecord
           remarks: ''
         })
     end
+
     self.all.each do |j_attendance|
+
       day = j_attendance.base_date.day
+
       result[day-1] = { 
+
         start_time:j_attendance.start_time,
+
         end_time:j_attendance.end_time,
-        working_time:      minutes_to_hour_and_decmltime(j_attendance.operating_time.to_i+j_attendance.break_time.to_i),
+
+        working_time:      minutes_to_hour_and_decmltime(j_attendance.operating_time.to_i+
+          (j_attendance.operating_time.nil? ? 0.00 : j_attendance.break_time.to_i)),
+
         break_time:        minutes_to_hour_and_decmltime(j_attendance.break_time.to_i),
+
         operating_time:    minutes_to_hour_and_decmltime(j_attendance.operating_time.to_i),
+
         paid_time:         minutes_to_hour_and_decmltime(j_attendance.paid_time.to_i),
+
         special_paid_time: minutes_to_hour_and_decmltime(j_attendance.special_paid_time.to_i),
+
         actual_time:       minutes_to_hour_and_decmltime(j_attendance.operating_time.to_i+j_attendance.paid_time.to_i+j_attendance.special_paid_time.to_i),
-        deduction_time:    minutes_to_hour_and_decmltime(j_attendance.deduction_time.to_i),
+
+        deducation_time:    minutes_to_hour_and_decmltime(j_attendance.deduction_time.to_i),
+
         remarks: j_attendance.attendance_details.join_work_contents
+
       }
     end
+
     result
+    
   end
 
   # Todo（7/1以降着手）
