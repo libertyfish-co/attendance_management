@@ -64,7 +64,6 @@ table, td, th {
   <%= ada.hidden_field :employee_id, value: @attendance.employee_id %>
   <%= ada.hidden_field :base_date, value: @current %>
   <%= ada.hidden_field :id, value: @attendance.id %>
-  <%= render 'layouts/errors', errors: @errors %>
 
   <div class="row mx-4">
     <!-- 先月・翌月遷移 -->

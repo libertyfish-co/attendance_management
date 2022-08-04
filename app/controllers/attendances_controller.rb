@@ -18,6 +18,20 @@ class AttendancesController < ApplicationController
 
   end
 
+  def check
+    @month = params['date'].blank? ? 
+      Time.current : Time.parse(params['date'])
+      
+    @errors = @emp.attendances.monthly_attendance_record(@month).
+      valid_check(BusinessCalendar.public_holidays(@month))
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
+
+  end
+
   # GET /attendances/1 or /attendances/1.json
   def show
   end

@@ -162,6 +162,29 @@ class Attendance < ApplicationRecord
   end
 
 
+  def self.valid_check(holidays)
+    result = nil
+    error_message = {valid_error: "登録された以下の日付の勤怠データに不整合があります。"}
+
+    holidays_a = holidays.map{|h|h.date.day}
+    
+    self.all.each do |attendance|
+
+      if holidays_a.include?(attendance.base_date.day)
+
+        week = ['日','月','火','水','木','金','土'][attendance.base_date.wday]
+
+        error_message["err_date-#{attendance.base_date.day}".to_sym] = attendance.base_date.strftime("%Y/%m/%d(#{week})")
+
+        result = true
+
+      end
+    end
+
+    result ? error_message.to_a : {success: "確認が取れました。帳票出力して下さい。"}.to_a
+  end
+
+
 
   # ************** private ******************
   # 2022/06/28 月勤怠フィルタは良好。（週勤怠未実装）

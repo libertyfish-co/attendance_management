@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   resources :attendances do
     collection do
       get :week
+      post :check
+      post :order
     end
   end
   resources :patterns

@@ -15,6 +15,14 @@ corporation = Corporation.create!(
 	regular_lines: 10
 )
 
+# 休日カレンダー
+BusinessCalendar.create!(
+	corporation_id: 1,
+	date: Time.new(2022,7,18),
+	proparties: 1
+)
+
+
 # 通常勤怠オーダー
 (1..5).each do |n|
 	Order.create!(

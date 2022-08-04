@@ -144,7 +144,10 @@
 
 <div class="clearfix mx-4">
     <div class="float-right">
-        <button type="button">チェック</button>
+        <%= form_tag(url_for(:action => 'check'), :remote => true) do %>
+            <%= hidden_field_tag :date, @month %>
+            <%= submit_tag "チェック" %>
+        <% end %>
         <button type="button" class="ml-4">帳簿出力</button>
         <button type="button" class="ml-4">オーダー別</button>
     </div>
