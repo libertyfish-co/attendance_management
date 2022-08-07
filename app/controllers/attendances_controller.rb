@@ -4,6 +4,8 @@ class AttendancesController < ApplicationController
   # GET /attendances or /attendances.json
   def index
 
+    @orders = Order.all
+    
     @month = params['date'].blank? ? 
       Time.current : Time.parse(params['date'])
 
