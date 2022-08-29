@@ -66,6 +66,14 @@
         padding: 8px 16px;
         font-size: 16px;
     }
+    #print_aria {
+        display: none;
+    }
+    @media print {
+        #print_aria {
+            display: block;
+        }
+    }
 </style>
 
 <div class="mx-4 row">
@@ -126,3 +134,5 @@
     </div>
   </div>
 </div>
+
+<%= render 'print' %>
