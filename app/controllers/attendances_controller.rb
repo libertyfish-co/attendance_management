@@ -5,7 +5,7 @@ class AttendancesController < ApplicationController
   def index
 
     @orders = Order.all
-    
+
     @month = params['date'].blank? ? 
       Time.current : Time.parse(params['date'])
 
@@ -32,6 +32,23 @@ class AttendancesController < ApplicationController
       format.js
     end
 
+  end
+
+  def orders
+    @month = params['date'].blank? ? 
+    Time.current : Time.parse(params['date'])
+    
+    orders = params.require(:attendance_detail).permit(orders: {})
+    
+    order_ids = orders[:orders].values.reject{|v| v.blank?}
+    
+    @attendances = @emp.attendances.monthly_attendance_record(@month).
+        filter{|r| r.attendance_details.where(order_id: [3,4]).length > 0}
+binding.pry
+      respond_to do |format|
+        format.html
+        format.js
+      end
   end
 
   # GET /attendances/1 or /attendances/1.json

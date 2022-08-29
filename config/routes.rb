@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     collection do
       get :week
       post :check
-      post :order
+      post :orders
     end
   end
   resources :patterns
