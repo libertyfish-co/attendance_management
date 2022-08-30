@@ -42,9 +42,14 @@ class AttendancesController < ApplicationController
     
     order_ids = orders[:orders].values.reject{|v| v.blank?}
     
-    @attendances = @emp.attendances.monthly_attendance_record(@month).
-        filter{|r| r.attendance_details.where(order_id: [3,4]).length > 0}
-binding.pry
+    attd_arr = @emp.attendances.monthly_attendance_record(@month).order(base_date: "ASC").
+    filter{|r| r.attendance_details.where(order_id: order_ids).length > 0}
+    
+    @attendances = Attendance.where(id: attd_arr.map{ |attd| attd.id}).
+        process_in_month(@month)
+    
+    @sum = @emp.attendances.select_at(@month,:month).aggregate_time
+
       respond_to do |format|
         format.html
         format.js
