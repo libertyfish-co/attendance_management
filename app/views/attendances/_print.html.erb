@@ -1,3 +1,60 @@
-<div id="print_aria">
-    <%= render 'table', attendances: @attendances %>
+<div id="print_area">
+    <% unless attendances.blank? %>
+    <div class="mx-4">
+        <table class="table table-hover table-sm text-center">
+            <thead>
+                <tr>
+                    <th rowspan="2" width="2%" class="pb">日</th>
+                    <th rowspan="2" width="2%" class="pb2">曜日</th>
+                    <th rowspan="2", colspan="3" width="12%" class="pb">時刻</th>
+                    <th colspan="7" width="42%" class="border-bottom">時間内訳</th>
+                    <th rowspan="2" width="42%" class="pb">摘要</th>
+                </tr>
+                <tr>
+                    <th class="border-top">作業</th>
+                    <th class="border-top">休憩</th>
+                    <th class="border-top">稼働</th>
+                    <th class="border-top">有給(一般)</th>
+                    <th class="border-top">有給(特別)</th>
+                    <th class="border-top">実働</th>
+                    <th class="border-top">控除</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% (@month.to_datetime.beginning_of_month..@month.to_datetime.end_of_month).each do |month| %>
+                    <tr class="<%= "today" if month.today? %>">
+                        <td width="2%" class="holiday <%= "sat" if month.saturday? %> <%= "sun" if month.sunday? %>">
+                            <%= format_to(month,:day) %>
+                        </td>
+                        <td width="2%" class="<%= "sat" if month.saturday? %> <%= "sun" if month.sunday? %>">
+                            <%= format_to(month,:wday) %>
+                        </td>
+                        <td width="5%"><%= format_to(attendances[month.day-1][:start_time],:am_pm)%></td>
+                        <td width="2%">～</td>
+                        <td width="5%"><%= format_to(attendances[month.day-1][:end_time],:am_pm)%></td>
+                        <td width="7%"><%=attendances[month.day-1][:working_time] %></td>
+                        <td width="7%"><%=attendances[month.day-1][:break_time] %></td>
+                        <td width="7%"><%=attendances[month.day-1][:operating_time] %></td>
+                        <td width="7%"><%=attendances[month.day-1][:paid_time] %></td>
+                        <td width="7%"><%=attendances[month.day-1][:special_paid_time] %></td>
+                        <td width="7%"><%=attendances[month.day-1][:actual_time] %></td>
+                        <td width="7%"><%=attendances[month.day-1][:deducation_time] %></td>
+                        <td width="42%"><%= attendances[month.day-1][:remarks] %></td>
+                    </tr>
+                <% end %>
+                <!-- 勤怠時間の集計表示 -->
+                <tr>
+                    <td colspan="5">合計</td>
+                    <td colspan="1"><%= @sum[:work_time] %></td>
+                    <td colspan="1"><%= (@sum[:break_time]) %></td>
+                    <td colspan="1"><%= (@sum[:operating_time]) %></td>
+                    <td colspan="1"><%= (@sum[:paid_time]) %></td>
+                    <td colspan="1"><%= (@sum[:special_paid_time]) %></td>
+                    <td colspan="1"><%= (@sum[:actual_time]) %></td>
+                    <td colspan="1"><%= (@sum[:deduction_time]) %></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <% end %>
 </div>
