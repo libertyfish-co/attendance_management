@@ -14,13 +14,16 @@ RUN npm install -g yarn
 RUN mkdir /attendance_management
 WORKDIR /attendance_management
 
+# なんでGemfile関係だけ先にコピーするのかわからん誰か教えて(2022/9/1 能瀬)
 COPY Gemfile /attendance_management/Gemfile
 COPY Gemfile.lock /attendance_management/Gemfile.lock
 RUN bundle install
 COPY . /attendance_management
 RUN yarn install --check-files
-RUN bundle exec rails webpacker:install
-RUN bundle exec rails webpacker:compile
+
+# ここでwebpacker:installしてもなぜかうまく動かないのでコメントアウト(2022/9/1 能瀬)
+# RUN rails webpacker:install
+# RUN rails webpacker:compile
 
 
 # Add a script to be executed every time the container starts.

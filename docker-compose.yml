@@ -2,14 +2,17 @@ version: '3'
 services:
   db:
     image: postgres
+    container_name: am_db
     volumes:
       # - ./tmp/db:/var/lib/postgresql/data # macの場合
-      - app_postgre:/var/lib/postgresql/data # windowsの場合
+      - am_app:/var/lib/postgresql/data # windowsの場合
     environment:
       TZ: Asia/Tokyo
       PGTZ: Asia/Tokyo
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
+# postgres の管理ツールなので使わない人はコメントアウトしてもいい(2022/9/1 能瀬)
+# そもそもこの設定で↑のDBにつながってる？(2022/9/1 能瀬)
   pgadmin4:
       image: dpage/pgadmin4:latest
       container_name: pgadmin4
@@ -25,7 +28,9 @@ services:
         - db
   web:
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    image: am_web
+    container_name: am_web
+    command: bash -c "rm -f tmp/pids/server.pid && rails s -p 3000 -b '0.0.0.0' && ./bin/webpack-dev-server"
     stdin_open: true
     tty: true
     volumes:
@@ -34,19 +39,20 @@ services:
       - "3000:3000"
     environment:
       VIRTUAL_PORT: 3000
-      WEBPACKER_DEV_SERVER_HOST: webpacker
+      WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
     depends_on:
       - db
-  webpacker:
-    build: .
-    volumes:
-      - .:/attendance_management
-    command: ./bin/webpack-dev-server
-    environment:
-      WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
-    ports:
-      - "3035:3035"
+# 動かないのでコメントアウト(2022/9/1 能瀬)
+#  webpacker:
+#    build: .
+#    volumes:
+#      - .:/attendance_management
+#    command: ./bin/webpack-dev-server
+#    environment:
+#      WEBPACKER_DEV_SERVER_HOST: 0.0.0.0
+#    ports:
+#      - "3035:3035"
 # 以下はWindowsのみ使用
 volumes:
-  app_postgre:
+  am_app:
     external: true
