@@ -90,11 +90,11 @@ rem set n^
 rem n
 
 echo.
-rem echo %n%| docker exec -it am_web webpacker:install
 rem echo %n%| docker exec -it am_web rails webpacker:install
+rem %n%| docker exec -it am_web rails webpacker:install
 
-echo docker exec -it am_web webpacker:install
 echo docker exec -it am_web rails webpacker:install
+docker exec -it am_web rails webpacker:install
 
 echo ---Åy%date% %time%Åzwebpacker:compile -------------------------------------------------------
 
